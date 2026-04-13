@@ -1,0 +1,61 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard Nhân viên{% endblock %}
+
+{% block body %}
+<aside class="sidebar" style="width: 240px; min-width: 240px;">
+    <div class="sidebar-logo" style="padding: 22px 20px;">
+        <div class="logo-icon">
+            <img src="{% static 'images/logo.jpg' %}" alt="Logo">
+        </div>
+        <div class="logo-text">
+            <h2>Trà Sữa Bông</h2>
+            <span>Nhân viên</span>
+        </div>
+    </div>
+
+    <div class="sidebar-section" style="padding: 20px 16px 10px;">
+        <div class="sidebar-section-label">Tổng quan</div>
+        <a href="#" class="nav-item active">🏠 Trang chủ</a>
+    </div>
+
+    <div class="sidebar-section" style="padding: 20px 16px 10px;">
+        <div class="sidebar-section-label">Xem</div>
+        <a href="#" class="nav-item">⏱ Thông tin chấm công</a>
+        <a href="#" class="nav-item">💰 Thông tin lương</a>
+        <a href="#" class="nav-item">👥 Thông tin nhân viên</a>
+        <a href="#" class="nav-item">📅 Thông tin lịch làm</a>
+        <a href="#" class="nav-item">🎁 Thưởng/Phạt</a>
+    </div>
+</aside>
+
+<main class="main">
+    <div class="header">
+        <h1 class="header-title">Xin chào, {{ request.user.username }}</h1>
+
+        <div class="header-user" id="userMenuBtn">
+            <div class="header-user-info">
+                <div class="name">{{ request.user.username }}</div>
+                <div class="role">Nhân viên</div>
+            </div>
+
+            <div class="avatar" style="width: 48px; height: 48px; border: 2px solid rgba(255,255,255,0.5); background: #eee;">
+                {% if employee_avatar %}
+                    <img src="{{ employee_avatar }}" alt="Avatar">
+                {% else %}
+                    <img src="{% static 'images/ava.png' %}" alt="Avatar">
+                {% endif %}
+            </div>
+
+            <div id="logoutDropdown" class="logout-dropdown">
+                <a href="{% url 'logout' %}">🚪 Đăng xuất</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content" style="padding: 25px 32px; gap: 20px;">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+{% endblock %}

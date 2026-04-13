@@ -1,0 +1,80 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard Quản lý{% endblock %}
+
+{% block body %}
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <div class="logo-icon">
+            <img src="{% static 'images/logo.jpg' %}" alt="Logo">
+        </div>
+        <div class="logo-text">
+            <h2>Trà Sữa Bông</h2>
+            <span>Quản lý</span>
+        </div>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-section-label">Tổng quan</div>
+        <a class="nav-item active" href="#">
+            <span class="nav-icon">🏠</span> Trang chủ
+        </a>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-section-label">Quản lý</div>
+        <a class="nav-item" href="#">
+            <span class="nav-icon">⏱</span> Chấm công
+        </a>
+        <a class="nav-item" href="#">
+            <span class="nav-icon">💰</span> Lương
+        </a>
+        <a class="nav-item" href="#">
+            <span class="nav-icon">👥</span> Nhân viên
+        </a>
+        <a class="nav-item" href="#">
+            <span class="nav-icon">📅</span> Lịch làm
+        </a>
+        <a class="nav-item" href="#">
+            <span class="nav-icon">🎁</span> Thưởng/Phạt
+        </a>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-section-label">Báo cáo</div>
+        <a class="nav-item" href="#">
+            <span class="nav-icon">📊</span> Báo cáo nhân sự
+        </a>
+    </div>
+</aside>
+
+<main class="main">
+    <div class="header">
+        <h1 class="header-title">Xin chào, {{ request.user.username }}</h1>
+
+        <div class="header-user" id="userMenuBtn">
+            <div class="header-user-info">
+                <div class="name">{{ request.user.username }}</div>
+                <div class="role">Quản lý cửa hàng</div>
+            </div>
+
+            <div class="avatar">
+                {% if manager_avatar %}
+                    <img src="{{ manager_avatar }}" alt="Avatar">
+                {% else %}
+                    {{ request.user.username|slice:":2"|upper }}
+                {% endif %}
+            </div>
+
+            <div class="dropdown-menu" id="logoutDropdown">
+                <a href="{% url 'logout' %}" class="dropdown-item">🚪 Đăng xuất</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+{% endblock %}

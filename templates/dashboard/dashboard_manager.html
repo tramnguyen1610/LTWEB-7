@@ -1,0 +1,76 @@
+{% extends "base/base_manager.html" %}
+
+{% block content %}
+<div class="stat-cards">
+    <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+            <div class="stat-value">31</div>
+            <div class="stat-label">Tổng nhân viên</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">👤</div>
+        <div class="stat-info">
+            <div class="stat-value">06</div>
+            <div class="stat-label">Đang làm việc</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🚶</div>
+        <div class="stat-info">
+            <div class="stat-value">02</div>
+            <div class="stat-label">Nghỉ làm</div>
+        </div>
+    </div>
+</div>
+
+<div class="section-card">
+    <div class="section-title">Truy cập nhanh</div>
+    <div class="quick-grid">
+        <a href="#" class="quick-card">
+            <div class="quick-icon">✏️</div>
+            <div class="quick-text">
+                <div class="qt-title">Chỉnh sửa</div>
+                <div class="qt-sub">Chỉnh sửa chấm công</div>
+            </div>
+        </a>
+
+        <a href="#" class="quick-card">
+            <div class="quick-icon">➕</div>
+            <div class="quick-text">
+                <div class="qt-title">Thêm nhân viên</div>
+                <div class="qt-sub">Tạo thông tin nhân viên mới</div>
+            </div>
+        </a>
+
+        <a href="#" class="quick-card">
+            <div class="quick-icon">📈</div>
+            <div class="quick-text">
+                <div class="qt-title">Báo cáo</div>
+                <div class="qt-sub">Xem chi tiết báo cáo</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="section-card">
+    <div class="section-title">Hoạt động gần đây</div>
+    <div class="activity-list">
+        <div class="activity-item">
+            <div class="act-text">Nguyễn Thị B đã chấm công vào lúc 08:15</div>
+            <div class="act-time">5 phút trước</div>
+        </div>
+        <div class="activity-item">
+            <div class="act-text">Lịch làm việc tuần sau đã được phê duyệt</div>
+            <div class="act-time">1 giờ trước</div>
+        </div>
+        <div class="activity-item">
+            <div class="act-text">Báo cáo nhân sự tháng 1 đã được tạo</div>
+            <div class="act-time">2 giờ trước</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
