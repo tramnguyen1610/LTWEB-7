@@ -1,0 +1,64 @@
+{% extends 'base/base_admin.html' %}
+
+{% block title %}Dashboard Quản lý{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Trụ sở Bảng Quản lý</h1>
+</div>
+
+<p class="lead">Xin chào, <strong>{{ user.get_full_name|default:user.username }}</strong> (Quản lý)</p>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h1 class="card-title">{{ total_employees }}</h1>
+                <p class="card-text">Tổng nhân viên</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h1 class="card-title">{{ active_employees }}</h1>
+                <p class="card-text">Đang làm việc</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h1 class="card-title">{{ inactive_employees }}</h1>
+                <p class="card-text">Nghỉ làm</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5><i class="fas fa-history"></i> Hoạt động gần đây</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Nguyễn Thị B đã chấm công vào lúc 08:15
+                        <span class="badge bg-secondary float-end">5 phút trước</span>
+                    </li>
+                    <li class="list-group-item">
+                        Lịch làm việc tuần sau đã được phê duyệt
+                        <span class="badge bg-secondary float-end">1 giờ trước</span>
+                    </li>
+                    <li class="list-group-item">
+                        Báo cáo nhân sự tháng 1 đã được tạo
+                        <span class="badge bg-secondary float-end">2 giờ trước</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

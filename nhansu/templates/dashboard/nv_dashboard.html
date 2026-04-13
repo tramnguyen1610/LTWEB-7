@@ -1,0 +1,54 @@
+{% extends 'base/base_nv.html' %}
+
+{% block title %}Dashboard Nhân viên{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Xin chào, {{ employee.full_name|default:user.username }}</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5><i class="fas fa-user"></i> Thông tin cá nhân</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>Họ tên:</th>
+                        <td>{{ employee.full_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ngày sinh:</th>
+                        <td>{{ employee.date_of_birth|date:"d/m/Y" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Số điện thoại:</th>
+                        <td>{{ employee.phone_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ngày vào làm:</th>
+                        <td>{{ employee.hire_date|date:"d/m/Y" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5><i class="fas fa-chart-simple"></i> Thống kê nhanh</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    Hôm nay: {% now "d/m/Y" %}
+                </div>
+                <div class="alert alert-success">
+                    Số ngày đã chấm công tháng này: 15
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
