@@ -1,0 +1,537 @@
+{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Thêm nhân viên - Trà Sữa Bông{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <div class="form-header">
+    <h2>➕ Thêm nhân viên mới</h2>
+
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <div class="form-body">
+      <div class="two-columns">
+        <!-- Cột trái -->
+        <div class="info-card">
+          <div class="card-title">📋 Thông tin cá nhân</div>
+          <div class="card-body">
+            <div class="field">
+              <label>Họ và tên <span class="required">*</span></label>
+              <input type="text" name="full_name" id="fullName" placeholder="Nhập họ và tên">
+              <div class="error-msg" id="errFullName">⚠ Vui lòng nhập họ và tên</div>
+            </div>
+
+            <div class="field">
+              <label>Số CCCD <span class="required">*</span></label>
+              <input type="text" name="citizen_id" id="citizenId" placeholder="12 số" maxlength="12">
+              <div class="error-msg" id="errCitizenId">⚠ Vui lòng nhập 12 số CCCD</div>
+            </div>
+
+            <div class="field">
+              <label>Ngày sinh</label>
+              <input type="date" name="date_of_birth">
+            </div>
+
+            <div class="field">
+              <label>Giới tính <span class="required">*</span></label>
+              <div class="gender-group">
+                <label><input type="radio" name="gender" value="M"> Nam</label>
+                <label><input type="radio" name="gender" value="F"> Nữ</label>
+                <label><input type="radio" name="gender" value="O"> Khác</label>
+              </div>
+              <div class="error-msg" id="errGender">⚠ Vui lòng chọn giới tính</div>
+            </div>
+
+            <div class="field">
+              <label>Số điện thoại <span class="required">*</span></label>
+              <input type="tel" name="phone_number" id="phone" placeholder="0xxxxxxxxx" maxlength="10">
+              <div class="error-msg" id="errPhone">⚠ Số điện thoại phải có 10 số, bắt đầu bằng 0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cột phải -->
+        <div class="info-card">
+          <div class="card-title">💼 Thông tin công việc</div>
+          <div class="card-body">
+            <div class="field">
+              <label>Số tài khoản</label>
+              <input type="text" name="bank_account" placeholder="Nhập số tài khoản">
+            </div>
+
+            <div class="field">
+              <label>Tên ngân hàng</label>
+              <input type="text" name="bank_name" placeholder="Nhập tên ngân hàng">
+            </div>
+
+            <div class="field">
+              <label>Vị trí <span class="required">*</span></label>
+              <select name="position" id="position">
+                <option value="">-- Chọn vị trí --</option>
+                {% for pos in positions %}
+                <option value="{{ pos.position_id }}">{{ pos.position_name }}</option>
+                {% endfor %}
+              </select>
+              <div class="error-msg" id="errPosition">⚠ Vui lòng chọn vị trí</div>
+            </div>
+
+            <div class="field">
+              <label>Ngày vào làm</label>
+              <input type="date" name="hire_date">
+            </div>
+
+            <div class="field">
+              <label>Tình trạng</label>
+              <select name="status">
+                <option value="probation">Thử việc</option>
+                <option value="official">Chính thức</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phần tài khoản -->
+      <div class="account-card">
+        <div class="account-title">👤 Thông tin tài khoản</div>
+        <div class="account-body">
+          <div class="field">
+            <label>Tên đăng nhập <span class="required">*</span></label>
+            <input type="text" name="username" id="username" placeholder="Nhập tên đăng nhập">
+            <div class="error-msg" id="errUsername">⚠ Vui lòng nhập tên đăng nhập</div>
+          </div>
+          <div class="field">
+            <label>Mật khẩu <span class="required">*</span></label>
+            <div class="password-wrapper">
+              <input type="password" name="password" id="password" placeholder="Ít nhất 6 ký tự">
+              <button type="button" class="toggle-pwd" onclick="togglePassword()">👁</button>
+            </div>
+            <div class="error-msg" id="errPassword">⚠ Mật khẩu phải có ít nhất 6 ký tự</div>
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="example@email.com">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a href="{% url 'employees:employee_list' %}" class="btn-cancel">❌ Hủy bỏ</a>
+      <button type="submit" class="btn-save">💾 Lưu nhân viên</button>
+    </div>
+  </form>
+</div>
+
+<style>
+  :root {
+    --primary: #8B1A2B;
+    --primary-dark: #6B1220;
+    --green-btn: #1A7A32;
+    --green-btn-dark: #145528;
+    --border-color: #D4C9A8;
+    --field-border: #BFBFBF;
+    --error-color: #DC2626;
+  }
+
+  .form-container {
+    background: #FFFDF6;
+    border-radius: 14px;
+    box-shadow: 0 3px 18px rgba(0,0,0,0.13);
+    overflow: hidden;
+  }
+
+  .form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .form-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1E2235;
+    margin: 0;
+  }
+
+  .close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #CCC;
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+
+  .close-btn:hover {
+    background: #f0f0f0;
+    border-color: #999;
+  }
+
+  .form-body {
+    padding: 24px;
+  }
+
+  .two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .info-card {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .card-title {
+    background: #F5EDD8;
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .card-body {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+  }
+
+  .required {
+    color: var(--primary);
+  }
+
+  .field input, .field select {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--field-border);
+    font-size: 14px;
+    width: 100%;
+    transition: all 0.2s;
+  }
+
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139,26,43,0.1);
+  }
+
+  .field input.error, .field select.error {
+    border-color: var(--error-color);
+    background: #FEF2F2;
+  }
+
+  .error-msg {
+    font-size: 11px;
+    color: var(--error-color);
+    display: none;
+  }
+
+  .error-msg.show {
+    display: block;
+  }
+
+  .gender-group {
+    display: flex;
+    gap: 20px;
+    padding: 6px 0;
+  }
+
+  .gender-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: normal;
+    cursor: pointer;
+  }
+
+  .gender-group input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+  }
+
+  .account-card {
+    margin-top: 24px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .account-title {
+    background: #2C3142;
+    padding: 12px 18px;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .account-body {
+    background: #2C3142;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .account-body .field label {
+    color: #BFC5D2;
+  }
+
+  .account-body .field input {
+    background: rgba(255,255,255,0.95);
+  }
+
+  .password-wrapper {
+    position: relative;
+  }
+
+  .password-wrapper input {
+    padding-right: 40px;
+  }
+
+  .toggle-pwd {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+  }
+
+  .readonly-field {
+    background: #F5F5F5 !important;
+    color: #888 !important;
+    cursor: not-allowed;
+  }
+
+  .info-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    padding: 20px 24px;
+    border-top: 1px solid var(--border-color);
+    background: #FFFDF6;
+  }
+
+  .btn-cancel, .btn-save {
+    padding: 10px 28px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .btn-cancel {
+    background: var(--primary);
+    color: white;
+    border: none;
+  }
+
+  .btn-cancel:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+  }
+
+  .btn-save {
+    background: var(--green-btn);
+    color: white;
+    border: none;
+  }
+
+  .btn-save:hover {
+    background: var(--green-btn-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26,122,50,0.3);
+  }
+
+  .toast {
+    display: none;
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid var(--green-btn);
+    border-radius: 10px;
+    padding: 12px 28px;
+    color: var(--green-btn);
+    font-weight: 600;
+    z-index: 1000;
+    white-space: nowrap;
+    animation: slideDown 0.25s ease;
+  }
+
+  @keyframes slideDown {
+    from { top: 0; opacity: 0; }
+    to { top: 30px; opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+    .two-columns {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .account-body {
+      grid-template-columns: 1fr;
+    }
+    .form-actions {
+      flex-direction: column-reverse;
+    }
+    .btn-cancel, .btn-save {
+      justify-content: center;
+    }
+  }
+</style>
+<script>
+  function togglePassword() {
+    const pwd = document.getElementById('password');
+    if (pwd) pwd.type = pwd.type === 'password' ? 'text' : 'password';
+  }
+
+  document.getElementById('employeeForm').addEventListener('submit', function(e) {
+    let valid = true;
+
+    // Validate họ tên
+    const fullName = document.getElementById('fullName')?.value.trim();
+    if (!fullName) {
+      document.getElementById('errFullName')?.classList.add('show');
+      document.getElementById('fullName')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errFullName')?.classList.remove('show');
+      document.getElementById('fullName')?.classList.remove('error');
+    }
+
+    // Validate CCCD
+    const citizenId = document.getElementById('citizenId')?.value.trim();
+    if (!citizenId || !/^\d{12}$/.test(citizenId)) {
+      document.getElementById('errCitizenId')?.classList.add('show');
+      document.getElementById('citizenId')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errCitizenId')?.classList.remove('show');
+      document.getElementById('citizenId')?.classList.remove('error');
+    }
+
+    // Validate giới tính
+    const gender = document.querySelector('input[name="gender"]:checked');
+    if (!gender) {
+      document.getElementById('errGender')?.classList.add('show');
+      valid = false;
+    } else {
+      document.getElementById('errGender')?.classList.remove('show');
+    }
+
+    // Validate số điện thoại
+    const phone = document.getElementById('phone')?.value.trim();
+    if (!phone || !/^0\d{9}$/.test(phone)) {
+      document.getElementById('errPhone')?.classList.add('show');
+      document.getElementById('phone')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errPhone')?.classList.remove('show');
+      document.getElementById('phone')?.classList.remove('error');
+    }
+
+    // Validate vị trí
+    const position = document.getElementById('position')?.value;
+    if (!position) {
+      document.getElementById('errPosition')?.classList.add('show');
+      document.getElementById('position')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errPosition')?.classList.remove('show');
+      document.getElementById('position')?.classList.remove('error');
+    }
+
+    // Validate tên đăng nhập (chỉ khi thêm mới)
+    {% if not is_edit %}
+    const username = document.getElementById('username')?.value.trim();
+    if (!username) {
+      document.getElementById('errUsername')?.classList.add('show');
+      document.getElementById('username')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errUsername')?.classList.remove('show');
+      document.getElementById('username')?.classList.remove('error');
+    }
+
+    // Validate mật khẩu (chỉ khi thêm mới)
+    const password = document.getElementById('password')?.value;
+    if (!password || password.length < 6) {
+      document.getElementById('errPassword')?.classList.add('show');
+      document.getElementById('password')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errPassword')?.classList.remove('show');
+      document.getElementById('password')?.classList.remove('error');
+    }
+    {% endif %}
+
+    if (!valid) {
+      e.preventDefault();
+      const firstError = document.querySelector('.error');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 2000);
+    }
+  });
+
+  // Clear error on input
+  document.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', function() {
+      this.classList.remove('error');
+      const parent = this.closest('.field');
+      if (parent) {
+        const errMsg = parent.querySelector('.error-msg');
+        if (errMsg) errMsg.classList.remove('show');
+      }
+    });
+  });
+
+  document.querySelectorAll('input[name="gender"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      document.getElementById('errGender')?.classList.remove('show');
+    });
+  });
+</script>
+{% endblock %}

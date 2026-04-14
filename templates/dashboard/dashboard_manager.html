@@ -5,7 +5,7 @@
     <div class="stat-card">
         <div class="stat-icon">👥</div>
         <div class="stat-info">
-            <div class="stat-value">31</div>
+            <div class="stat-value">{{ total_employees|default:"0" }}</div>
             <div class="stat-label">Tổng nhân viên</div>
         </div>
     </div>
@@ -13,7 +13,7 @@
     <div class="stat-card">
         <div class="stat-icon">👤</div>
         <div class="stat-info">
-            <div class="stat-value">06</div>
+            <div class="stat-value">{{ working_employees|default:"0" }}</div>
             <div class="stat-label">Đang làm việc</div>
         </div>
     </div>
@@ -21,7 +21,7 @@
     <div class="stat-card">
         <div class="stat-icon">🚶</div>
         <div class="stat-info">
-            <div class="stat-value">02</div>
+            <div class="stat-value">{{ absent_employees|default:"0" }}</div>
             <div class="stat-label">Nghỉ làm</div>
         </div>
     </div>
@@ -30,7 +30,7 @@
 <div class="section-card">
     <div class="section-title">Truy cập nhanh</div>
     <div class="quick-grid">
-        <a href="#" class="quick-card">
+        <a href="{% url 'attendance:chinh_sua_cham_cong' %}" class="quick-card">
             <div class="quick-icon">✏️</div>
             <div class="quick-text">
                 <div class="qt-title">Chỉnh sửa</div>
@@ -41,8 +41,8 @@
         <a href="#" class="quick-card">
             <div class="quick-icon">➕</div>
             <div class="quick-text">
-                <div class="qt-title">Thêm nhân viên</div>
-                <div class="qt-sub">Tạo thông tin nhân viên mới</div>
+                <div class="qt-title">Quản lý nhân viên</div>
+                <div class="qt-sub">Xem và tạo thông tin nhân viên</div>
             </div>
         </a>
 

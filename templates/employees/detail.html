@@ -1,1 +1,537 @@
-﻿{% extends 'base/base_admin.html' %}{% block content %}<h1>Đang phát triển...</h1>{% endblock %}
+﻿{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Xem thông tin nhân viên - Trà Sữa Bông{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --primary: #8B1A2B;
+    --primary-dark: #6B1220;
+    --sidebar-bg: #2C3142;
+    --sidebar-text: #B8BFCE;
+    --card-bg: #F5EDD8;
+    --body-bg: #9AA5B8;
+    --content-bg: #8C97AA;
+    --text-dark: #1E2235;
+    --text-muted: #6B7280;
+    --icon-circle: #2C3142;
+    --icon-accent: #C8A84B;
+  }
+
+  .profile-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.09);
+    position: relative;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 22px;
+    min-height: 460px;
+  }
+
+  .btn-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid #CCC;
+    background: rgba(255,255,255,.8);
+    font-size: 14px;
+    cursor: pointer;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .18s;
+    z-index: 2;
+  }
+
+  .btn-close:hover {
+    background: #fff;
+    border-color: #999;
+  }
+
+  .left-panel {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px 16px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    box-shadow: 0 1px 6px rgba(0,0,0,.07);
+  }
+
+  .emp-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 3px solid #E8D5B7;
+    background: #F0E4D0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--primary);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 6px;
+  }
+
+  .emp-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .status-dot {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #22C55E;
+    border: 2px solid #fff;
+  }
+
+  .emp-name {
+    font-size: 15.5px;
+    font-weight: 800;
+    color: var(--text-dark);
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 18px;
+  }
+
+  .emp-meta {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .meta-item {
+    text-align: center;
+  }
+
+  .meta-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .meta-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .info-section-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .info-section-title .title-icon {
+    font-size: 15px;
+  }
+
+  .info-grid {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: grid;
+    gap: 10px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+
+  .info-grid.cols-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .info-grid.cols-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .info-field .if-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+
+  .info-field .if-value {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .account-dark {
+    background: var(--icon-circle);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.15);
+  }
+
+  .account-dark .if-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: rgba(255,255,255,.55);
+    margin-bottom: 3px;
+  }
+
+  .account-dark .if-value {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .search-box {
+    flex: 1;
+    position: relative;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 11px 44px 11px 16px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.9);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13.5px;
+    color: var(--text-dark);
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+
+  .search-box input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139,26,43,0.12);
+    background: #fff;
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 17px;
+    color: var(--primary);
+    pointer-events: none;
+  }
+
+  .btn-create {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: var(--icon-circle);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-create:hover {
+    background: #1a1f30;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  }
+
+  .search-results {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.16);
+    z-index: 50;
+    overflow: hidden;
+    display: none;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  .search-results.show {
+    display: block;
+  }
+
+  .search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    cursor: pointer;
+    transition: background .15s;
+    border-bottom: 1px solid #F3F4F6;
+  }
+
+  .search-result-item:hover {
+    background: #FFF5F6;
+  }
+
+  .sri-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .sri-info .sri-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .sri-info .sri-code {
+    font-size: 11.5px;
+    color: var(--text-muted);
+  }
+
+  .highlight {
+    background: #FCEABB;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  .search-empty {
+    padding: 18px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 768px) {
+    .profile-card {
+      grid-template-columns: 1fr;
+    }
+    .info-grid.cols-2, .info-grid.cols-3 {
+      grid-template-columns: 1fr;
+    }
+    .account-dark {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="toolbar">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Nhập tên hoặc mã nhân viên cần tìm..." autocomplete="off">
+    <span class="search-icon">🔍</span>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+  <a class="btn-create" href="{% url 'employees:employee_add' %}">➕ Tạo thông tin nhân viên</a>
+</div>
+
+<div class="profile-card">
+  <button class="btn-close" onclick="window.location.href='{% url 'employees:employee_list' %}'">✕</button>
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="emp-avatar">
+      <span id="empInitials">{{ employee.full_name|slice:":2"|upper }}</span>
+      <img id="empAvatarImg" src="" alt="" style="display:none;">
+      <div class="status-dot"></div>
+    </div>
+    <div class="emp-name">{{ employee.full_name }}</div>
+    <div class="emp-meta">
+      <div class="meta-item">
+        <div class="meta-label">Mã nhân viên</div>
+        <div class="meta-value">NV{{ employee.employee_id|stringformat:"03d" }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Ngày vào làm</div>
+        <div class="meta-value">{{ employee.hire_date|date:'d/m/Y' }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Vị trí</div>
+        <div class="meta-value">{{ employee.position.position_name }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Tình trạng</div>
+        <div class="meta-value">
+          {% if employee.status == 'official' %}
+            <span style="color: #28a745;">● Chính thức</span>
+          {% else %}
+            <span style="color: #ffc107;">● Thử việc</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <!-- THÔNG TIN CÁ NHÂN -->
+    <div class="info-section">
+      <div class="info-section-title">
+        <span class="title-icon">👤</span> Thông tin cá nhân
+      </div>
+      <div class="info-grid cols-2">
+        <div class="info-field">
+          <div class="if-label">Họ và tên</div>
+          <div class="if-value">{{ employee.full_name }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Số CCCD</div>
+          <div class="if-value">{{ employee.citizen_id }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Ngày sinh</div>
+          <div class="if-value">{{ employee.date_of_birth|date:'d/m/Y' }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Giới tính</div>
+          <div class="if-value">{{ employee.get_gender_display }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THÔNG TIN LIÊN HỆ & NGÂN HÀNG -->
+    <div class="info-section">
+      <div class="info-section-title">
+        <span class="title-icon">💳</span> Thông tin liên hệ & Ngân hàng
+      </div>
+      <div class="info-grid cols-3">
+        <div class="info-field">
+          <div class="if-label">Số điện thoại</div>
+          <div class="if-value">{{ employee.phone_number }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Tên ngân hàng</div>
+          <div class="if-value">{{ employee.bank_name|default:"Chưa cập nhật" }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Số tài khoản</div>
+          <div class="if-value">{{ employee.bank_account|default:"Chưa cập nhật" }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THÔNG TIN TÀI KHOẢN -->
+    <div class="info-section">
+      <div class="info-section-title">
+        <span class="title-icon">🔑</span> Thông tin tài khoản
+      </div>
+      <div class="account-dark">
+        <div class="info-field">
+          <div class="if-label">Tên tài khoản</div>
+          <div class="if-value">{{ employee.user.username }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Email</div>
+          <div class="if-value">{{ employee.user.email|default:"Chưa cập nhật" }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let searchTimeout;
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+
+  function handleSearch() {
+    const keyword = searchInput.value.trim();
+
+    if (keyword.length < 2) {
+      searchResults.classList.remove('show');
+      return;
+    }
+
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      fetch(`/employees/api/search/?q=${encodeURIComponent(keyword)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.data.length > 0) {
+            searchResults.innerHTML = data.data.map(emp => {
+              const nameHtml = emp.full_name.replace(new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark class="highlight">$1</mark>');
+              const idHtml = emp.id.replace(new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark class="highlight">$1</mark>');
+              return `
+                <div class="search-result-item" onclick="window.location.href='/employees/detail/${emp.id.replace('NV', '')}/'">
+                  <div class="sri-avatar">${emp.full_name.slice(0,2).toUpperCase()}</div>
+                  <div class="sri-info">
+                    <div class="sri-name">${nameHtml}</div>
+                    <div class="sri-code">${idHtml} &nbsp;·&nbsp; ${emp.position}</div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+            searchResults.classList.add('show');
+          } else {
+            searchResults.innerHTML = '<div class="search-empty">Không tìm thấy nhân viên</div>';
+            searchResults.classList.add('show');
+          }
+        });
+    }, 300);
+  }
+
+  searchInput.addEventListener('input', handleSearch);
+  searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      const keyword = this.value.trim();
+      if (keyword) {
+        window.location.href = `/employees/?search=${encodeURIComponent(keyword)}`;
+      }
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+      searchResults.classList.remove('show');
+    }
+  });
+</script>
+{% endblock %}

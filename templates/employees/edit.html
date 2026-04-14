@@ -1,0 +1,658 @@
+{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Cập nhật nhân viên - Trà Sữa Bông{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --primary: #8B1A2B;
+    --primary-dark: #6B1220;
+    --card-bg: #F5EDD8;
+    --content-bg: #8C97AA;
+    --text-dark: #1E2235;
+    --text-muted: #6B7280;
+    --icon-circle: #2C3142;
+    --icon-accent: #C8A84B;
+    --green-btn: #1A7A32;
+    --green-btn-dark: #145528;
+    --section-border: #D4C9A8;
+    --field-border: #BFBFBF;
+    --disabled-bg: #E8E8E8;
+    --disabled-text: #888;
+  }
+
+  .form-card {
+    background: #FFFDF6;
+    border-radius: 14px;
+    box-shadow: 0 3px 18px rgba(0,0,0,0.14);
+    overflow: hidden;
+  }
+
+  .card-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 22px 13px;
+    border-bottom: 1px solid #EAE2CC;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .card-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .card-topbar-icon {
+    width: 36px;
+    height: 36px;
+    background: #2C3142;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: white;
+  }
+
+  .card-topbar-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-dark);
+  }
+
+  .card-topbar-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .btn-x {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid #CCC;
+    background: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    transition: all .18s;
+  }
+
+  .btn-x:hover {
+    background: #f0f0f0;
+    border-color: #999;
+  }
+
+  .ma-nv-label {
+    padding: 10px 22px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .sections-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    padding: 12px 22px 0;
+  }
+
+  .section-box {
+    border: 1.5px solid var(--section-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .section-box-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--card-bg);
+    border-bottom: 1.5px solid var(--section-border);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .section-box-body {
+    padding: 14px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .req {
+    color: #8B1A2B;
+  }
+
+  .field input, .field select {
+    padding: 8px 11px;
+    border-radius: 7px;
+    border: 1.5px solid var(--field-border);
+    background: #fff;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13.5px;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color .18s, box-shadow .18s;
+    width: 100%;
+  }
+
+  .field input:focus, .field select:focus {
+    border-color: #8B1A2B;
+    box-shadow: 0 0 0 3px rgba(139,26,43,.1);
+  }
+
+  .field input.no-edit {
+    background: var(--disabled-bg);
+    color: var(--disabled-text);
+    cursor: not-allowed;
+    border-color: #D4D4D4;
+  }
+
+  .date-wrap {
+    position: relative;
+  }
+
+  .date-wrap input {
+    padding-right: 32px;
+  }
+
+  .date-icon {
+    position: absolute;
+    right: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #888;
+    pointer-events: none;
+  }
+
+  .dob-gender-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .gender-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0 4px;
+    flex-wrap: wrap;
+  }
+
+  .g-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    cursor: default;
+  }
+
+  .g-label input[type=radio] {
+    accent-color: #8B1A2B;
+    width: 14px;
+    height: 14px;
+  }
+
+  .field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath fill='%236B7280' d='M5.5 7L0 0h11z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 11px center;
+    padding-right: 28px;
+  }
+
+  .account-section {
+    margin: 14px 22px 0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .account-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: var(--icon-circle);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .account-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .avatar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .avatar-wrap {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .avatar-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2.5px solid var(--icon-accent);
+    background: #E8D5B7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #8B1A2B;
+    overflow: hidden;
+    position: relative;
+    transition: filter .2s;
+  }
+
+  .avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    display: none;
+  }
+
+  .avatar-hover {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(0,0,0,.52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .2s;
+    font-size: 18px;
+    color: white;
+  }
+
+  .avatar-wrap:hover .avatar-hover {
+    opacity: 1;
+  }
+
+  .avatar-wrap:hover .avatar-circle {
+    filter: brightness(.75);
+  }
+
+  .avatar-hint {
+    font-size: 10px;
+    color: rgba(255,255,255,.5);
+  }
+
+  #avatarInput {
+    display: none;
+  }
+
+  .account-body {
+    padding: 14px 18px;
+    background: var(--icon-circle);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+
+  .account-body .field label {
+    color: #BFC5D2;
+  }
+
+  .account-body .field input {
+    background: rgba(255,255,255,.92);
+    border-color: rgba(255,255,255,.2);
+    color: var(--text-dark);
+  }
+
+  .account-body .field input.no-edit {
+    background: rgba(255,255,255,.45);
+    color: #666;
+    border-color: rgba(255,255,255,.1);
+  }
+
+  .pw-wrap {
+    position: relative;
+  }
+
+  .pw-wrap input {
+    padding-right: 36px;
+  }
+
+  .pw-eye {
+    position: absolute;
+    right: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: #777;
+    padding: 0;
+  }
+
+  .form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 22px 20px;
+    flex-wrap: wrap;
+  }
+
+  .btn-huy, .btn-luu {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 22px;
+    border-radius: 9px;
+    border: none;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+  }
+
+  .btn-huy {
+    background: #8B1A2B;
+    color: #fff;
+  }
+
+  .btn-huy:hover {
+    background: #6B1220;
+    transform: translateY(-1px);
+  }
+
+  .btn-luu {
+    background: var(--green-btn);
+    color: #fff;
+  }
+
+  .btn-luu:hover {
+    background: var(--green-btn-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(26,122,50,.35);
+  }
+
+  .toast {
+    display: none;
+    position: fixed;
+    top: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border: 1.5px solid var(--green-btn);
+    border-radius: 10px;
+    padding: 13px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green-btn);
+    z-index: 300;
+    box-shadow: 0 6px 24px rgba(0,0,0,.15);
+    white-space: nowrap;
+    animation: slideDown .25s ease;
+  }
+
+  @keyframes slideDown {
+    from { top: 8px; opacity: 0; }
+    to { top: 28px; opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+    .sections-row {
+      grid-template-columns: 1fr;
+    }
+    .dob-gender-row {
+      grid-template-columns: 1fr;
+    }
+    .account-body {
+      grid-template-columns: 1fr;
+    }
+    .toast {
+      white-space: normal;
+      text-align: center;
+    }
+  }
+</style>
+
+<div class="form-card">
+  <div class="card-topbar">
+    <div class="card-topbar-left">
+      <div class="card-topbar-icon">📋</div>
+      <div>
+        <div class="card-topbar-title">Thông tin nhân viên</div>
+        <div class="card-topbar-sub">Chỉ chỉnh sửa thông tin cho phép chỉnh sửa</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="ma-nv-label">
+    Mã nhân viên: <strong>NV{{ employee.employee_id|stringformat:"03d" }}</strong>
+  </div>
+
+  <form method="POST" id="employeeForm">
+    {% csrf_token %}
+
+    <div class="sections-row">
+      <!-- THÔNG TIN CÁ NHÂN -->
+      <div class="section-box">
+        <div class="section-box-header">ℹ️ &nbsp;Thông tin cá nhân</div>
+        <div class="section-box-body">
+          <div class="field">
+            <label>Họ và tên <span class="req">*</span></label>
+            <input type="text" name="full_name" class="no-edit" readonly value="{{ employee.full_name }}">
+          </div>
+
+          <div class="field">
+            <label>Số CCCD <span class="req">*</span></label>
+            <input type="text" name="citizen_id" class="no-edit" readonly value="{{ employee.citizen_id }}">
+          </div>
+
+          <div class="dob-gender-row">
+            <div class="field">
+              <label>Ngày sinh</label>
+              <div class="date-wrap">
+                <input type="text" class="no-edit" readonly value="{{ employee.date_of_birth|date:'d/m/Y' }}">
+                <span class="date-icon">📅</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Giới tính <span class="req">*</span></label>
+              <div class="gender-group">
+                <label class="g-label">
+                  <input type="radio" name="gender" value="M" {% if employee.gender == 'M' %}checked{% endif %} disabled> Nam
+                </label>
+                <label class="g-label">
+                  <input type="radio" name="gender" value="F" {% if employee.gender == 'F' %}checked{% endif %} disabled> Nữ
+                </label>
+                <label class="g-label">
+                  <input type="radio" name="gender" value="O" {% if employee.gender == 'O' %}checked{% endif %} disabled> Khác
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Số điện thoại <span class="req">*</span></label>
+            <input type="tel" name="phone_number" value="{{ employee.phone_number }}" placeholder="Nhập số điện thoại" maxlength="10">
+          </div>
+        </div>
+      </div>
+
+      <!-- THÔNG TIN CÔNG VIỆC -->
+      <div class="section-box">
+        <div class="section-box-header">💼 &nbsp;Thông tin công việc</div>
+        <div class="section-box-body">
+          <div class="field">
+            <label>Số tài khoản</label>
+            <input type="text" name="bank_account" value="{{ employee.bank_account|default:'' }}" placeholder="Nhập số tài khoản">
+          </div>
+
+          <div class="field">
+            <label>Tên ngân hàng</label>
+            <input type="text" name="bank_name" value="{{ employee.bank_name|default:'' }}" placeholder="Nhập tên ngân hàng">
+          </div>
+
+          <div class="field">
+            <label>Vị trí <span class="req">*</span></label>
+            <select name="position">
+              <option value="">-- Chọn vị trí --</option>
+              {% for pos in positions %}
+              <option value="{{ pos.position_id }}" {% if employee.position.position_id == pos.position_id %}selected{% endif %}>
+                {{ pos.position_name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Ngày vào làm</label>
+            <div class="date-wrap">
+              <input type="text" class="no-edit" readonly value="{{ employee.hire_date|date:'d/m/Y' }}">
+              <span class="date-icon">📅</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Tình trạng</label>
+            <select name="status">
+              <option value="probation" {% if employee.status == 'probation' %}selected{% endif %}>Thử việc</option>
+              <option value="official" {% if employee.status == 'official' %}selected{% endif %}>Chính thức</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCOUNT SECTION -->
+    <div class="account-section">
+      <div class="account-header">
+        <div class="account-header-left">👤 &nbsp;Thông tin tài khoản</div>
+        <div class="avatar-col">
+          <div class="avatar-wrap" onclick="document.getElementById('avatarInput').click()" title="Nhấn để thay đổi ảnh">
+            <div class="avatar-circle" id="avatarCircle">
+              <span id="avatarInitials">{{ employee.full_name|slice:":2"|upper }}</span>
+              <img id="avatarImg" src="" alt="">
+            </div>
+            <div class="avatar-hover">📷</div>
+          </div>
+          <div class="avatar-hint">Đổi ảnh</div>
+          <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar(event)">
+        </div>
+      </div>
+
+      <div class="account-body">
+        <div class="field">
+          <label>Tên tài khoản <span class="req">*</span></label>
+          <input type="text" name="username" class="no-edit" readonly value="{{ employee.user.username }}">
+        </div>
+        <div class="field">
+          <label>Mật khẩu mới</label>
+          <div class="pw-wrap">
+            <input type="password" name="password" id="matKhau" placeholder="Để trống nếu không đổi">
+            <button class="pw-eye" type="button" onclick="togglePw()">👁</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" value="{{ employee.user.email|default:'' }}" placeholder="Nhập email">
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="form-footer">
+      <a href="{% url 'employees:employee_list' %}" class="btn-huy">❌ &nbsp;Hủy</a>
+      <button type="submit" class="btn-luu">💾 &nbsp;Lưu</button>
+    </div>
+  </form>
+</div>
+
+<div class="toast" id="toast">✅ Cập nhật thông tin nhân viên thành công</div>
+
+<script>
+  function goBack() {
+    window.location.href = "{% url 'employees:employee_list' %}";
+  }
+
+  function togglePw() {
+    const inp = document.getElementById('matKhau');
+    const btn = document.querySelector('.pw-eye');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      btn.textContent = '🙈';
+    } else {
+      inp.type = 'password';
+      btn.textContent = '👁';
+    }
+  }
+
+  function previewAvatar(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = document.getElementById('avatarImg');
+      img.src = ev.target.result;
+      img.style.display = 'block';
+      document.getElementById('avatarInitials').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Hiện toast khi submit thành công
+  const form = document.getElementById('employeeForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2000);
+    });
+  }
+</script>
+{% endblock %}
