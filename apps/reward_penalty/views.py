@@ -1,3 +1,6 @@
 from django.shortcuts import render
+from .models import RewardPenalty
 
-# Create your views here.
+def reward_penalty_list(request):
+    items = RewardPenalty.objects.all().order_by('-date_applied')
+    return render(request, 'reward_penalty/list.html', {'items': items})

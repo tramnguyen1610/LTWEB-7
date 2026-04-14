@@ -1,0 +1,34 @@
+/* --- FORM THÔNG TIN & STEPPER --- */
+.form-card { background: #FDF8ED; border-radius: 16px; padding: 24px 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+.form-card-title { font-size: 17px; font-weight: 700; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+
+.steps-bar { display: flex; margin-bottom: 24px; }
+.step { flex: 1; position: relative; text-align: center; }
+.step-num { width: 32px; height: 32px; border-radius: 50%; background: #D1D5DB; color: #fff; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.step.active .step-num { background: var(--primary); }
+.step.done .step-num { background: #16A34A; }
+
+/* --- KHU VỰC UPLOAD --- */
+.upload-area { border: 2px dashed #C8A84B; border-radius: 10px; padding: 30px; text-align: center; background: rgba(200,168,75,0.05); cursor: pointer; }
+.upload-area:hover { background: rgba(200,168,75,0.1); }
+
+/* --- BẢNG PREVIEW DỮ LIỆU --- */
+.preview-section { background: white; border-radius: 16px; padding: 24px; margin-top: 20px; display: none; }
+.preview-section.vis { display: block; }
+
+.table-wrap { overflow-x: auto; margin-top: 15px; border-radius: 8px; border: 1px solid #E5E7EB; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #F9FAFB; }
+th { padding: 12px 15px; text-align: left; font-size: 13px; color: #4B5563; border-bottom: 2px solid #E5E7EB; }
+td { padding: 12px 15px; border-bottom: 1px solid #E5E7EB; font-size: 13.5px; }
+
+/* --- MODAL CHI TIẾT --- */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; width: 90%; max-width: 800px; border-radius: 16px; overflow: hidden; }
+.modal-head { padding: 20px; background: #F9FAFB; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E5E7EB; }
+
+/* Các badge trạng thái */
+.badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+.bok { background: #DCFCE7; color: #166534; }
+.bwrn { background: #FEF3C7; color: #92400E; }

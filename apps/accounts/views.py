@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
+from apps.employees.models import Employee # Import thêm model này
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -17,7 +17,6 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-
             if user.is_staff:
                 return redirect('dashboard_manager')
             return redirect('dashboard_employee')
@@ -34,9 +33,16 @@ def dashboard_employee(request):
     if request.user.is_staff:
         return redirect('dashboard_manager')
 
-    display_name = request.user.get_full_name().strip() or request.user.username
+    # Lấy thông tin chi tiết từ bảng Employee
+    try:
+        employee = request.user.employee
+        display_name = employee.full_name
+    except:
+        employee = None
+        display_name = request.user.username
 
     context = {
+        'employee': employee,
         'display_name': display_name,
         'role_name': 'Nhân viên',
     }
@@ -47,9 +53,16 @@ def dashboard_manager(request):
     if not request.user.is_staff:
         return redirect('dashboard_employee')
 
-    display_name = request.user.get_full_name().strip() or request.user.username
+    # Tương tự, lấy thông tin Manager từ bảng Employee
+    try:
+        employee = request.user.employee
+        display_name = employee.full_name
+    except:
+        employee = None
+        display_name = request.user.username
 
     context = {
+        'employee': employee,
         'display_name': display_name,
         'role_name': 'Quản lý cửa hàng',
     }

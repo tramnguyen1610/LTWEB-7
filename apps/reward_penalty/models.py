@@ -1,29 +1,36 @@
 from django.db import models
-
-# Create your models here.
-# reward_penalty/models.py
-from django.db import models
-from ..employees.models import Employee
-
+from apps.employees.models import Employee
 
 class RewardPenalty(models.Model):
+    # Standardizing choices to English
     TYPE_CHOICES = (
-        ('bonus', 'Thưởng'),
-        ('penalty', 'Phạt'),
+        ('reward', 'Reward'),
+        ('penalty', 'Penalty')
     )
 
-    reward_penalty_id = models.AutoField(primary_key=True)
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='reward_penalties')
-    type = models.CharField(max_length=10, choices=TYPE_CHOICES, verbose_name='Loại')
-    description = models.TextField(verbose_name='Mô tả')
-    amount = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Số tiền')
-    applied_date = models.DateField(verbose_name='Ngày áp dụng')
-    created_at = models.DateTimeField(auto_now_add=True)
+    rp_id = models.AutoField(primary_key=True)
+    employee = models.ForeignKey(
+        Employee,
+        on_delete=models.CASCADE,
+        verbose_name="Employee"
+    )
+    type = models.CharField(
+        max_length=10,
+        choices=TYPE_CHOICES,
+        verbose_name="Type"
+    )
+    amount = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        verbose_name="Amount (VND)"
+    )
+    reason = models.TextField(verbose_name="Reason")
+    date_applied = models.DateField(verbose_name="Date Applied")
 
     def __str__(self):
-        return f"{self.employee.full_name} - {self.get_type_display()}: {self.amount}"
+        # This will now return "Reward - Tran Thai Thuc Linh"
+        return f"{self.get_type_display()} - {self.employee.full_name}"
 
     class Meta:
-        db_table = 'reward_penalty'
-        verbose_name = 'Thưởng phạt'
-        verbose_name_plural = 'Thưởng phạt'
+        verbose_name = "Reward and Penalty"
+        verbose_name_plural = "Rewards and Penalties"
