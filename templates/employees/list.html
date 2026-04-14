@@ -1,1 +1,706 @@
-﻿{% extends 'base/base_admin.html' %}{% block content %}<h1>Đang phát triển...</h1>{% endblock %}
+﻿{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Quản lý nhân viên - Trà Sữa Bông{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --primary: #8B1A2B;
+    --primary-dark: #6B1220;
+    --primary-light: #A52035;
+    --sidebar-bg: #2C3142;
+    --sidebar-text: #B8BFCE;
+    --sidebar-active: #8B1A2B;
+    --card-bg: #F5EDD8;
+    --card-bg-hover: #EDE0C4;
+    --body-bg: #9AA5B8;
+    --content-bg: #8C97AA;
+    --white: #fff;
+    --text-dark: #1E2235;
+    --text-muted: #6B7280;
+    --icon-circle: #2C3142;
+    --icon-accent: #C8A84B;
+  }
+
+  .employee-management {
+    padding: 0;
+  }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .search-box {
+    flex: 1;
+    position: relative;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 11px 44px 11px 16px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.9);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13.5px;
+    color: var(--text-dark);
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+
+  .search-box input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139,26,43,0.12);
+    background: #fff;
+  }
+
+  .search-box input::placeholder {
+    color: #9CA3AF;
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 17px;
+    color: var(--primary);
+    pointer-events: none;
+  }
+
+  .btn-create {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: var(--icon-circle);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-create:hover {
+    background: #1a1f30;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  }
+
+  /* ── TABLE CARD ── */
+  .table-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+
+  .table-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 18px;
+  }
+
+  .table-card-title span {
+    font-size: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: var(--primary);
+  }
+
+  thead th {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  thead th:first-child {
+    border-radius: 8px 0 0 8px;
+  }
+
+  thead th:last-child {
+    border-radius: 0 8px 8px 0;
+    text-align: center;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: background 0.18s;
+  }
+
+  tbody tr:hover {
+    background: rgba(139,26,43,0.05);
+  }
+
+  tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  tbody td {
+    padding: 12px 14px;
+    font-size: 13.5px;
+    color: var(--text-dark);
+  }
+
+  tbody td:first-child {
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  tbody td:last-child {
+    text-align: center;
+  }
+
+  /* action buttons */
+  .action-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.18s;
+    text-decoration: none;
+  }
+
+  .btn-view {
+    background: var(--icon-circle);
+    color: #fff;
+  }
+
+  .btn-view:hover {
+    background: #1a1f30;
+    transform: scale(1.1);
+  }
+
+  .btn-edit {
+    background: #F3A4A4;
+    color: #fff;
+  }
+
+  .btn-edit:hover {
+    background: #e87c7c;
+    transform: scale(1.1);
+  }
+
+  .btn-delete {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  .btn-delete:hover {
+    background: var(--primary-dark);
+    transform: scale(1.1);
+  }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 18px;
+  }
+
+  .page-btn {
+    padding: 7px 13px;
+    border-radius: 7px;
+    border: 1.5px solid rgba(0,0,0,0.12);
+    background: rgba(255,255,255,0.7);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .page-btn:hover {
+    background: #fff;
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .page-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  .page-btn.nav-pg {
+    color: var(--text-muted);
+  }
+
+  .page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* ── POPUP OVERLAY ── */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .overlay.show {
+    display: flex;
+  }
+
+  /* ── DELETE CONFIRM POPUP ── */
+  .popup-confirm {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px 32px 28px;
+    width: 340px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: popIn 0.22s ease;
+  }
+
+  @keyframes popIn {
+    from {
+      transform: scale(0.88);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .popup-warn-icon {
+    font-size: 44px;
+    margin-bottom: 10px;
+  }
+
+  .popup-confirm h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+  }
+
+  .popup-confirm p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .popup-nv-name {
+    background: #F5F5F5;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+  }
+
+  .popup-nv-name .pn-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .popup-nv-name .pn-code {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .btn-xoa {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: background 0.2s;
+  }
+
+  .btn-xoa:hover {
+    background: var(--primary-dark);
+  }
+
+  .btn-huy {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px;
+    transition: color 0.2s;
+  }
+
+  .btn-huy:hover {
+    color: var(--text-dark);
+  }
+
+  /* ── SUCCESS TOAST ── */
+  .toast {
+    display: none;
+    position: fixed;
+    top: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border: 1.5px solid var(--primary);
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    z-index: 1100;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    white-space: nowrap;
+    animation: slideDown 0.25s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      top: 10px;
+      opacity: 0;
+    }
+    to {
+      top: 28px;
+      opacity: 1;
+    }
+  }
+
+  /* search highlight */
+  .highlight {
+    background: #FCEABB;
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filter-select {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.9);
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .filter-select:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  .clear-filter {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+
+  .clear-filter:hover {
+    text-decoration: underline;
+  }
+
+  .search-result-info {
+    background: rgba(255,255,255,0.7);
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--text-dark);
+  }
+
+  .no-result {
+    text-align: center;
+    padding: 50px;
+    color: var(--text-muted);
+  }
+
+  .no-result a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .status-active {
+    color: #28a745;
+    font-weight: 500;
+  }
+
+  .status-probation {
+    color: #ffc107;
+    font-weight: 500;
+  }
+</style>
+
+<div class="employee-management">
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-box">
+      <form method="GET" action="{% url 'employees:employee_list' %}" id="searchForm">
+        <input type="text"
+               name="search"
+               id="searchInput"
+               placeholder="Nhập tên hoặc mã nhân viên cần tìm..."
+               value="{{ search_keyword }}"
+               autocomplete="off">
+        <span class="search-icon">🔍</span>
+      </form>
+    </div>
+    <a class="btn-create" href="{% url 'employees:employee_add' %}">
+  ➕ Tạo thông tin nhân viên
+</a>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <form method="GET" action="{% url 'employees:employee_list' %}" id="filterForm">
+      <input type="hidden" name="search" value="{{ search_keyword }}">
+
+      <select name="position" class="filter-select" onchange="this.form.submit()">
+        <option value="">-- Tất cả vị trí --</option>
+        {% for pos in positions %}
+        <option value="{{ pos.position_id }}" {% if selected_position == pos.position_id %}selected{% endif %}>
+          {{ pos.position_name }}
+        </option>
+        {% endfor %}
+      </select>
+
+      <select name="status" class="filter-select" onchange="this.form.submit()">
+        <option value="">-- Tất cả trạng thái --</option>
+        <option value="probation" {% if selected_status == 'probation' %}selected{% endif %}>Thử việc</option>
+        <option value="official" {% if selected_status == 'official' %}selected{% endif %}>Chính thức</option>
+      </select>
+
+      <select name="gender" class="filter-select" onchange="this.form.submit()">
+        <option value="">-- Tất cả giới tính --</option>
+        <option value="M" {% if selected_gender == 'M' %}selected{% endif %}>Nam</option>
+        <option value="F" {% if selected_gender == 'F' %}selected{% endif %}>Nữ</option>
+        <option value="O" {% if selected_gender == 'O' %}selected{% endif %}>Khác</option>
+      </select>
+    </form>
+
+    {% if search_keyword or selected_position or selected_status or selected_gender %}
+    <a href="{% url 'employees:employee_list' %}" class="clear-filter">✖ Xóa bộ lọc</a>
+    {% endif %}
+  </div>
+
+  <!-- SEARCH RESULT INFO -->
+  <div class="search-result-info">
+    📊 Tìm thấy <strong>{{ total_results }}</strong> nhân viên
+    {% if search_keyword %}
+    với từ khóa "<strong>{{ search_keyword }}</strong>"
+    {% endif %}
+  </div>
+
+  <!-- TABLE CARD -->
+  <div class="table-card">
+    <div class="table-card-title">
+      <span>📋</span> Danh sách nhân viên
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Mã nhân viên</th>
+          <th>Tên nhân viên</th>
+          <th>SĐT</th>
+          <th>Vị trí</th>
+          <th>Giới tính</th>
+          <th>Tình trạng</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for emp in employees %}
+        <tr>
+          <td>NV{{ emp.employee_id|stringformat:"03d" }}</td>
+          <td>{{ emp.full_name }}</td>
+          <td>{{ emp.phone_number }}</td>
+          <td>{{ emp.position.position_name }}</td>
+          <td>{{ emp.get_gender_display }}</td>
+          <td>
+            {% if emp.status == 'official' %}
+              <span class="status-active">● Chính thức</span>
+            {% else %}
+              <span class="status-probation">● Thử việc</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="action-btns">
+              <a href="{% url 'employees:employee_detail' emp.employee_id %}" class="action-btn btn-view" title="Xem">👁</a>
+              <a href="{% url 'employees:employee_edit' emp.employee_id %}" class="action-btn btn-edit" title="Sửa">✏️</a>
+              <button class="action-btn btn-delete" title="Xóa" onclick="askDelete('NV{{ emp.employee_id }}', '{{ emp.full_name|escapejs }}')">🗑</button>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="no-result">
+            🔍 Không tìm thấy nhân viên nào<br>
+            <small>Thử tìm kiếm với từ khóa khác hoặc <a href="{% url 'employees:employee_add' %}">thêm nhân viên mới</a></small>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- PAGINATION -->
+    {% if employees.has_other_pages %}
+    <div class="pagination">
+      {% if employees.has_previous %}
+        <button class="page-btn nav-pg" onclick="goPage({{ employees.previous_page_number }})">[Trước]</button>
+      {% endif %}
+
+      {% for num in employees.paginator.page_range %}
+        {% if employees.number == num %}
+          <button class="page-btn active">{{ num }}</button>
+        {% elif num > employees.number|add:'-3' and num < employees.number|add:'3' %}
+          <button class="page-btn" onclick="goPage({{ num }})">{{ num }}</button>
+        {% endif %}
+      {% endfor %}
+
+      {% if employees.has_next %}
+        <button class="page-btn nav-pg" onclick="goPage({{ employees.next_page_number }})">[Tiếp]</button>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- DELETE CONFIRM POPUP -->
+<div class="overlay" id="overlayConfirm">
+  <div class="popup-confirm">
+    <div class="popup-warn-icon">⚠️</div>
+    <h2>Xác nhận xóa?</h2>
+    <p>Bạn chắc chắn muốn xóa nhân viên này khỏi hệ thống?<br>Hành động này không thể hoàn tác</p>
+    <div class="popup-nv-name">
+      <div class="pn-name" id="popupName"></div>
+      <div class="pn-code" id="popupCode"></div>
+    </div>
+    <button class="btn-xoa" onclick="confirmDelete()">Xóa</button>
+    <button class="btn-huy" onclick="closeConfirm()">Hủy bỏ</button>
+  </div>
+</div>
+
+<!-- SUCCESS TOAST -->
+<div class="toast" id="toastSuccess">✅ Xóa nhân viên thành công</div>
+
+<script>
+  let deleteTarget = null;
+  let deleteId = null;
+
+  function goPage(page) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', page);
+    window.location.href = url.toString();
+  }
+
+  function askDelete(id, name) {
+    deleteTarget = id;
+    deleteId = id.replace('NV', '');
+    document.getElementById('popupName').textContent = name;
+    document.getElementById('popupCode').textContent = `Mã NV: ${id}`;
+    document.getElementById('overlayConfirm').classList.add('show');
+  }
+
+  function closeConfirm() {
+    document.getElementById('overlayConfirm').classList.remove('show');
+    deleteTarget = null;
+  }
+
+  function confirmDelete() {
+    if (!deleteTarget) return;
+
+    fetch(`/employees/api/delete/${deleteId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        closeConfirm();
+        const toast = document.getElementById('toastSuccess');
+        toast.style.display = 'block';
+        setTimeout(() => {
+          toast.style.display = 'none';
+          location.reload();
+        }, 1500);
+      } else {
+        alert('Xóa thất bại: ' + data.error);
+      }
+    })
+    .catch(error => {
+      alert('Có lỗi xảy ra: ' + error);
+    });
+  }
+
+  // Auto submit search
+  let searchTimeout;
+  document.getElementById('searchInput')?.addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      document.getElementById('searchForm').submit();
+    }, 500);
+  });
+
+  // Close overlay when clicking outside
+  document.getElementById('overlayConfirm')?.addEventListener('click', function(e) {
+    if (e.target === this) closeConfirm();
+  });
+</script>
+{% endblock %}

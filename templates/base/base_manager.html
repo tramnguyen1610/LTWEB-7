@@ -20,7 +20,7 @@
 
         <div class="sidebar-section">
             <div class="sidebar-section-label">Tổng quan</div>
-            <a class="nav-item active" href="{% url 'dashboard_manager' %}">
+            <a class="nav-item active" href="/employees/">
                 <span class="nav-icon">🏠</span> Trang chủ
             </a>
         </div>
@@ -32,9 +32,9 @@
                 <span class="nav-icon">⏱</span> Chấm công
             </a>
             <div class="submenu" id="submenu-chamcong">
-                <a class="sub-item" href="{% url 'xu_ly_cham_cong' %}">Xử lý chấm công</a>
-                <a class="sub-item" href="{% url 'chinh_sua_cham_cong' %}">Chỉnh sửa chấm công</a>
-                <a class="sub-item" href="{% url 'xem_cham_cong' %}">Xem thông tin chấm công</a>
+                <a class="sub-item" href="#">Xử lý chấm công</a>
+                <a class="sub-item" href="#">Chỉnh sửa chấm công</a>
+                <a class="sub-item" href="#">Xem thông tin chấm công</a>
             </div>
 
             <a class="nav-item nav-toggle" href="javascript:void(0);" data-target="submenu-luong">
@@ -46,7 +46,7 @@
                 <a class="sub-item" href="#">Tính lương</a>
             </div>
 
-            <a class="nav-item" href="#">
+            <a class="nav-item" href="/employees/">
                 <span class="nav-icon">👥</span> Nhân viên
             </a>
 
@@ -66,30 +66,36 @@
                 <a class="sub-item" href="#">Thiết lập</a>
                 <a class="sub-item" href="#">Xem thông tin</a>
             </div>
+
             <div class="sidebar-section-label">Báo cáo</div>
-        <a class="nav-item nav-toggle" href="javascript:void(0);" data-target="submenu-baocao">
-            <span class="nav-icon">📊</span> Báo cáo nhân sự
-        </a>
-    </div>
+            <a class="nav-item nav-toggle" href="javascript:void(0);" data-target="submenu-baocao">
+                <span class="nav-icon">📊</span> Báo cáo nhân sự
+            </a>
+            <div class="submenu" id="submenu-baocao">
+                <a class="sub-item" href="#">Báo cáo chấm công</a>
+                <a class="sub-item" href="#">Báo cáo lương</a>
+                <a class="sub-item" href="#">Báo cáo thưởng/phạt</a>
+            </div>
+        </div>
     </aside>
 
     <main class="main">
         <header class="header">
             <div class="header-left">
-                <h1 class="header-title">Xin chào, {{ request.user.username }}</h1>
+                <h1 class="header-title">Xin chào, {{ request.user.username|default:"Quản lý" }}</h1>
             </div>
 
             <div class="header-user" onclick="toggleLogoutMenu(event)">
                 <div class="header-user-info">
-                    <div class="name">{{ request.user.username }}</div>
+                    <div class="name">{{ request.user.username|default:"Quản lý" }}</div>
                     <div class="role">Quản lý cửa hàng</div>
                 </div>
                 <div class="avatar">
-                    {{ request.user.username|slice:":2"|upper }}
+                    {{ request.user.username|default:"QL"|slice:":2"|upper }}
                 </div>
 
                 <div id="dropdownLogout" class="dropdown-menu">
-                    <a href="{% url 'logout' %}" class="dropdown-item">🚪 Đăng xuất</a>
+                    <a href="/logout/" class="dropdown-item">🚪 Đăng xuất</a>
                 </div>
             </div>
         </header>
@@ -118,7 +124,7 @@
         if (menu) menu.style.display = 'none';
     });
 
-    // Xử lý Sidebar xổ xuống (Không cần file main.js nữa, gộp hết vô đây cho chắc)
+    // Xử lý Sidebar xổ xuống
     const navToggles = document.querySelectorAll('.nav-toggle');
     navToggles.forEach(toggle => {
         toggle.addEventListener('click', function(e) {
@@ -133,4 +139,184 @@
         });
     });
 </script>
+
+<style>
+    /* Style cho sidebar và header để match với giao diện */
+    .manager-container {
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .sidebar {
+        width: 260px;
+        background: #2C3142;
+        color: #B8BFCE;
+        overflow-y: auto;
+    }
+
+    .sidebar-logo {
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .logo-text h2 {
+        color: white;
+        font-size: 16px;
+        margin: 0;
+    }
+
+    .logo-text span {
+        font-size: 11px;
+        color: #B8BFCE;
+    }
+
+    .sidebar-section {
+        padding: 20px 16px;
+    }
+
+    .sidebar-section-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #7A8299;
+        margin-bottom: 12px;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        color: #B8BFCE;
+        text-decoration: none;
+        border-radius: 8px;
+        margin-bottom: 4px;
+        transition: all 0.2s;
+    }
+
+    .nav-item:hover, .nav-item.active {
+        background: #8B1A2B;
+        color: white;
+    }
+
+    .nav-icon {
+        font-size: 18px;
+    }
+
+    .submenu {
+        display: none;
+        padding-left: 44px;
+    }
+
+    .submenu.show {
+        display: block;
+    }
+
+    .sub-item {
+        display: block;
+        padding: 8px 12px;
+        color: #B8BFCE;
+        text-decoration: none;
+        font-size: 13px;
+        border-radius: 6px;
+    }
+
+    .sub-item:hover {
+        background: rgba(255,255,255,0.1);
+        color: white;
+    }
+
+    .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: #9AA5B8;
+    }
+
+    .header {
+        background: #8B1A2B;
+        padding: 0 24px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .header-title {
+        color: white;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    .header-user {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .header-user-info {
+        text-align: right;
+    }
+
+    .header-user-info .name {
+        color: white;
+        font-weight: 600;
+    }
+
+    .header-user-info .role {
+        color: rgba(255,255,255,0.7);
+        font-size: 12px;
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        background: #C8A84B;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 50px;
+        right: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+    }
+
+    .dropdown-menu.show {
+        display: block;
+    }
+
+    .dropdown-item {
+        display: block;
+        padding: 10px 20px;
+        color: #333;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .dropdown-item:hover {
+        background: #f0f0f0;
+    }
+
+    .content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0;
+    }
+</style>
 {% endblock %}
