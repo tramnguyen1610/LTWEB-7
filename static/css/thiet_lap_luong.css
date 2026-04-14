@@ -1,0 +1,85 @@
+/* --- BẢNG DANH SÁCH MỨC LƯƠNG --- */
+.salary-table-container {
+    overflow-x: auto;
+}
+.salary-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+.salary-table thead tr {
+    border-bottom: 2px solid var(--border-color);
+    background: #2C3142;
+    color: #fff;
+}
+.salary-table th {
+    padding: 15px 12px;
+}
+.salary-table th:first-child {
+    border-radius: 8px 0 0 0;
+}
+.salary-table th:last-child {
+    border-radius: 0 8px 0 0;
+    text-align: center;
+}
+.salary-table tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+}
+/* Thay thế cho onmouseover/onmouseout trong HTML cũ */
+.salary-table tbody tr:hover {
+    background: #f8fafc;
+}
+.salary-table td {
+    padding: 15px 12px;
+}
+
+/* --- CÁC THÀNH PHẦN NHỎ TRONG BẢNG --- */
+.fw-600 { font-weight: 600; }
+.text-navy { color: #0A1C52; font-weight: bold; }
+.text-center { text-align: center; }
+
+.badge-official {
+    background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 4px; font-size: 13px; font-weight: bold;
+}
+.badge-probation {
+    background: #fff3e0; color: #ef6c00; padding: 4px 8px; border-radius: 4px; font-size: 13px; font-weight: bold;
+}
+.btn-setup {
+    background: #8B1A2B; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;
+}
+
+/* --- POPUP (MODAL) THIẾT LẬP --- */
+.modal-overlay {
+    display: none; /* Mặc định ẩn */
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.show {
+    display: flex; /* Hiện modal khi có class này */
+}
+.modal-content {
+    background-color: #fff; padding: 30px; border-radius: 12px; width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.modal-title { margin-top: 0; color: #0A1C52; margin-bottom: 20px; text-align: center; }
+.modal-label { display: block; font-size: 13px; color: #666; margin-bottom: 5px; }
+.modal-desc { font-weight: bold; font-size: 16px; color: #333; }
+.modal-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0A1C52;
+    box-sizing: border-box;
+    text-align: right;
+}
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.btn-cancel { padding: 10px 20px; border: none; background: #e0e0e0; color: #333; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.btn-save { padding: 10px 20px; border: none; background: #0A1C52; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; }

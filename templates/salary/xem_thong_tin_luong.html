@@ -1,0 +1,101 @@
+{% extends 'base/base_manager.html' %}
+{% load static %}
+
+{% block title %}Xem Thông Tin Lương - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/xem_thong_tin_luong.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+    <a href="{% url 'dashboard_manager' %}">Trang chủ</a> / <a href="#">Lương</a> / Xem thông tin lương
+{% endblock %}
+
+{% block content %}
+<div class="content" style="padding: 0;">
+    <div class="search-card" style="margin-bottom: 20px;">
+        <select class="month-select" id="monthSelect" onchange="loadDataByMonth()">
+            </select>
+
+        <div class="search-wrapper" style="position: relative; flex: 1;">
+            <input type="text" class="search-input" id="searchInput" placeholder="Nhập tên hoặc mã nhân viên cần tìm..." onkeyup="filterTable()">
+            <i class="fa-solid fa-magnifying-glass search-icon" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--primary);"></i>
+        </div>
+    </div>
+
+    <div class="table-card" style="background: var(--card-bg); border-radius: 12px; padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+        <h2 class="table-header-title" style="font-size: 20px; font-weight: 700; color: var(--text-dark); margin-bottom: 16px;">
+            <i class="fa-solid fa-list-check"></i> Danh sách nhân viên
+        </h2>
+        <table class="data-table" style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden;">
+            <thead>
+                <tr>
+                    <th style="background: var(--sidebar-bg); color: white; padding: 16px; text-align: center;">Mã nhân viên</th>
+                    <th style="background: var(--sidebar-bg); color: white; padding: 16px; text-align: left;">Tên nhân viên</th>
+                    <th style="background: var(--sidebar-bg); color: white; padding: 16px; text-align: center;">Vị trí</th>
+                    <th style="background: var(--sidebar-bg); color: white; padding: 16px; text-align: center;">Lương cơ bản</th>
+                    <th style="background: var(--sidebar-bg); color: white; padding: 16px; text-align: center;">Tổng lương</th>
+                </tr>
+            </thead>
+            <tbody id="employeeTableBody">
+                </tbody>
+        </table>
+
+        <div class="pagination" id="paginationContainer" style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
+            </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="salaryModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Chi tiết lương nhân viên</h3>
+            <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="modal-body">
+            <div class="emp-profile-card">
+                <div class="emp-profile-top">
+                    <div class="emp-basic">
+                        <img src="" alt="Avatar" class="emp-avatar" id="m-avatar">
+                        <div>
+                            <div class="emp-name" id="m-name">...</div>
+                            <div class="emp-id-role"><span id="m-id">...</span> - <span id="m-role">...</span></div>
+                        </div>
+                    </div>
+                    <div class="emp-month-tag" id="m-month">...</div>
+                </div>
+                <div class="emp-profile-bottom">
+                    <div class="emp-stat">Mức lương/giờ: <strong id="m-rate" style="color: var(--primary);">...</strong></div>
+                    <div class="emp-stat hours">Tổng giờ làm: <strong id="m-hours">... giờ</strong></div>
+                </div>
+            </div>
+
+            <div class="salary-details">
+                <div class="sd-title"><i class="fa-solid fa-sack-dollar" style="color: var(--primary);"></i> Chi tiết tính lương</div>
+                <div class="sd-card">
+                    <div class="sd-row">
+                        <span class="label">Lương cơ bản (Mức lương/giờ x Tổng giờ)</span>
+                        <span class="val" id="m-base">...</span>
+                    </div>
+                    <div class="sd-row">
+                        <span class="label">+ Thưởng</span>
+                        <span class="val" id="m-bonus">...</span>
+                    </div>
+                    <div class="sd-row">
+                        <span class="label">- Phạt</span>
+                        <span class="val" id="m-penalty">...</span>
+                    </div>
+
+                    <div class="sd-row total">
+                        <span class="label">Tổng lương thực nhận</span>
+                        <span class="val text-green" id="m-total">...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/xem_thong_tin_luong.js' %}"></script>
+{% endblock %}

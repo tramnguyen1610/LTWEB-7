@@ -1,0 +1,65 @@
+{% extends 'base/base_manager.html' %}
+{% load static %}
+
+{% block title %}Tính Lương - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/tinh_luong.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-nav" style="margin-bottom: 16px;">
+    <a href="{% url 'dashboard_manager' %}">Trang chủ</a> / Tính lương
+</div>
+
+<div class="content">
+    {% csrf_token %}
+
+    <div class="tl-card">
+        <h2 class="tl-card-title">🧮 Chọn kỳ tính lương</h2>
+        <p class="tl-card-subtitle">Hệ thống sẽ tự động tính dựa trên dữ liệu chấm công thật (không tính Quản lý).</p>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <select id="monthSelect" class="form-select" onchange="loadPreview()"
+                style="padding: 12px; border-radius: 8px; border: 1px solid #ccc; width: 250px;">
+                <option value="">-- Chọn tháng --</option>
+            </select>
+            <span id="statusBadge" class="status-badge" style="color: #d68910; font-weight: 600;">
+                <i class="fa-solid fa-hourglass-half"></i> Sẵn sàng tính lương
+            </span>
+        </div>
+    </div>
+
+    <div class="tl-card preview-card" id="previewCard">
+        <h2 class="tl-card-title" id="previewTitle">Dữ liệu xem trước</h2>
+        <p class="tl-card-subtitle">Các con số này được tổng hợp từ bảng Chấm công</p>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-label">Tổng nhân viên</div>
+                <div class="stat-value" id="totalEmployees">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Tổng giờ làm</div>
+                <div class="stat-value" id="totalHours">0 giờ</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Dự kiến tổng lương</div>
+                <div class="stat-value" id="estimatedTotal">0đ</div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1);">
+            <button class="btn" style="padding: 10px 24px; border: 1px solid #ccc; border-radius: 8px; cursor: pointer;"
+                    onclick="location.reload()">Hủy</button>
+            <button class="btn-calculate" id="btnCalculate"
+                    style="padding: 10px 24px; background: #8B1A2B; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;"
+                    onclick="startCalculate()">
+                <i class="fa-solid fa-coins"></i> Bắt đầu tính
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/tinh_luong.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base/base_manager.html' %}
+{% load static %}
+{% block title %}Kết quả tính lương - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ket_qua_tinh_luong.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-nav" style="margin-bottom: 16px;">
+    <a href="{% url 'dashboard_manager' %}">Trang chủ</a> / Tính lương
+</div>
+
+<div class="result-wrapper">
+    <div class="result-title">
+        📊 Tính lương tháng {{ period }}
+        <span class="badge-period">Chi tiết theo giờ</span>
+    </div>
+    <div class="result-sub">
+        Chi tiết lương của từng nhân viên (chưa bao gồm thưởng/phạt)
+    </div>
+
+    <div class="table-responsive">
+        <table class="salary-table">
+            <thead>
+                <tr>
+                    <th>Mã NV</th>
+                    <th>Tên nhân viên</th>
+                    <th>Mức lương/giờ</th>
+                    <th>Số giờ làm</th>
+                    <th>Lương cơ bản</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                <tr>
+                    <td>NV{{ item.employee_id|stringformat:"03d" }}</td>
+                    <td><strong>{{ item.full_name }}</strong></td>
+                    <td>{{ item.hourly_rate_display }}</td>
+                    <td>{% if item.work_hours > 0 %}{{ item.work_hours|floatformat:0 }} giờ{% else %}0 giờ{% endif %}</td>
+                    <td style="color: #0A1C52; font-weight: 600;">{{ item.total_salary|floatformat:0 }}đ</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" style="text-align: center; padding: 40px;">📭 Không có dữ liệu nhân viên trong tháng này.</td></tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="4" style="text-align: right; font-weight: 800;">Tổng Cộng</td>
+                    <td style="font-weight: 800; font-size: 1.05rem;">{{ total_sum|floatformat:0 }}đ</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-secondary" onclick="window.location.href='{% url 'salary:tinh_luong' %}'">
+            🔄 Tính lại
+        </button>
+        <button class="btn-primary" id="btnSave"
+                data-period="{{ period }}"
+                data-url="{% url 'salary:api_luu_bang_luong' %}"
+                data-redirect="{% url 'salary:xem_thong_tin_luong' %}">
+            💾 Lưu bảng lương
+        </button>
+    </div>
+</div>
+
+{% csrf_token %}
+<script src="{% static 'js/ket_qua_tinh_luong.js' %}"></script>
+{% endblock %}
