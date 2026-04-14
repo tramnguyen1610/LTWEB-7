@@ -1,0 +1,528 @@
+:root {
+    --primary: #8B1A2B;
+    --primary-dark: #6B1220;
+    --card-bg: rgba(255, 255, 255, 0.94);
+    --text-dark: #1E2235;
+    --text-muted: #6B7280;
+    --green: #16A34A;
+    --orange: #D97706;
+    --red: #DC2626;
+    --border: #E5E7EB;
+    --shadow-sm: 0 2px 10px rgba(0,0,0,0.09);
+}
+
+.approve-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* FILTER CARD */
+.filter-card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.filter-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary);
+    color: #fff;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 0 0 10px 0;
+}
+
+.filter-body {
+    padding: 16px 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 140px;
+}
+
+.filter-name {
+    flex: 2;
+    min-width: 180px;
+}
+
+.filter-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.filter-input,
+.filter-select {
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-dark);
+    font-size: 13px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+    border-color: var(--primary);
+}
+
+.filter-btns {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    padding-bottom: 1px;
+}
+
+.btn-search,
+.btn-reset {
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-search {
+    background: var(--primary);
+    color: #fff;
+    padding: 9px 22px;
+}
+
+.btn-search:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-reset {
+    background: #6B7280;
+    color: #fff;
+    padding: 9px 18px;
+}
+
+.btn-reset:hover {
+    background: #4B5563;
+}
+
+/* STATS */
+.stats-row {
+    display: flex;
+    gap: 28px;
+    padding: 10px 20px 14px;
+    border-top: 1px solid #EEE;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.si-label {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.si-val {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-dark);
+}
+
+.si-val.green {
+    color: var(--green);
+}
+
+.si-val.orange {
+    color: var(--orange);
+}
+
+.si-val.red {
+    color: var(--red);
+}
+.table-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.09);
+    overflow: hidden;
+}
+
+/* CHỈ KHUNG BẢNG CUỘN */
+.table-scroll {
+    max-height: 420px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+/* header bảng dính khi cuộn trong khung bảng */
+.table-scroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #F1F3F6;
+}
+
+.main-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1000px;
+}
+
+.main-table thead th {
+    color: var(--text-dark);
+    padding: 13px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    border-bottom: 2px solid #E5E7EB;
+    white-space: nowrap;
+}
+
+.main-table tbody td {
+    padding: 14px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid #F0F2F5;
+    vertical-align: middle;
+    color: var(--text-dark);
+}
+
+/* thanh cuộn đẹp hơn */
+.table-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.18);
+    border-radius: 999px;
+}
+
+.emp-code {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 12.5px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.emp-name {
+    font-weight: 600;
+    font-size: 13.5px;
+}
+
+/* STATUS BADGE */
+.badge {
+    display: inline-block;
+    padding: 5px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.badge-approved {
+    background: #DCFCE7;
+    color: var(--green);
+}
+
+.badge-pending {
+    background: #FEF3C7;
+    color: var(--orange);
+}
+
+.badge-rejected {
+    background: #FEE2E2;
+    color: var(--red);
+}
+
+/* ACTIONS */
+.action-btns {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.btn-duyet,
+.btn-tuchoi {
+    border: none;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    color: #fff;
+    padding: 6px 14px;
+}
+
+.btn-duyet {
+    background: var(--green);
+}
+
+.btn-duyet:hover {
+    background: #15803D;
+    transform: translateY(-1px);
+}
+
+.btn-tuchoi {
+    background: #EF4444;
+}
+
+.btn-tuchoi:hover {
+    background: var(--red);
+    transform: translateY(-1px);
+}
+
+.dash {
+    color: #C9CDD4;
+    font-size: 18px;
+    letter-spacing: 3px;
+}
+
+/* EMPTY */
+.no-result {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* TOAST */
+.toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: #1E2235;
+    color: #fff;
+    padding: 13px 20px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 200;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* MODAL */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.confirm-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 28px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: popIn 0.22s ease;
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.92) translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.confirm-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.confirm-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text-dark);
+}
+
+.confirm-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+    line-height: 1.6;
+}
+
+.confirm-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.cbtn {
+    padding: 10px 24px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+}
+
+.cbtn-cancel {
+    background: #F3F4F6;
+    color: var(--text-dark);
+}
+
+.cbtn-cancel:hover {
+    background: #E5E7EB;
+}
+
+.cbtn-confirm-green {
+    background: var(--green);
+    color: #fff;
+}
+
+.cbtn-confirm-green:hover {
+    background: #15803D;
+}
+
+.cbtn-confirm-red {
+    background: #EF4444;
+    color: #fff;
+}
+
+.cbtn-confirm-red:hover {
+    background: var(--red);
+}
+
+/* SCROLLBAR */
+.table-wrap::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 999px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+    .filter-row {
+        align-items: stretch;
+    }
+
+    .filter-btns {
+        width: 100%;
+        padding-bottom: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-row {
+        gap: 18px;
+    }
+
+    .confirm-btns {
+        flex-direction: column;
+    }
+
+    .cbtn {
+        width: 100%;
+    }
+}
+
+
+/* =========================================
+   CSS CHO SUBMENU TRONG SIDEBAR (STYLE.CSS)
+   ========================================= */
+
+/* 1. Xóa khoảng trống giữa các mục để đường kẻ liền mạch */
+.submenu {
+    display: none;
+    flex-direction: column;
+    margin-left: 28px; /* Thụt lề vào cho đẹp */
+    margin-top: 4px;
+    margin-bottom: 8px;
+    gap: 0 !important; /* QUAN TRỌNG: Ép khoảng cách về 0 để viền trái chạm nhau */
+}
+
+/* Khi có class show (từ Django) thì hiển thị ra */
+.submenu.show {
+    display: flex;
+}
+
+/* 2. Tạo đường kẻ xám mờ mặc định cho TẤT CẢ mục con */
+.sub-item {
+    display: block;
+    padding: 10px 15px 10px 20px;
+    border-left: 2px solid rgba(255, 255, 255, 0.1); /* Đường viền xám mờ */
+    color: #9AA3B8;
+    font-size: 13.5px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+/* Hiệu ứng khi lướt chuột qua */
+.sub-item:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    border-left-color: rgba(255, 255, 255, 0.4); /* Sáng đường viền lên tí */
+}
+
+/* 3. Tạo vạch ĐỎ nổi bật cho mục đang chọn */
+.sub-item.active {
+    color: #fff;
+    border-left-color: var(--primary);
+    font-weight: 500;
+}

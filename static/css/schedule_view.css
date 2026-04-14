@@ -1,0 +1,157 @@
+/* static/css/xemlichlamviec.css */
+
+/* --- CONTENT LAYOUT --- */
+.content-wrapper {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- FILTER CARD --- */
+.filter-card {
+    background: #F5EDD8;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.filter-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.filter-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6B7280;
+}
+
+.filter-group input, .filter-group select {
+    padding: 10px;
+    border: 1px solid #D8CEBC;
+    border-radius: 8px;
+    outline: none;
+}
+
+/* --- STATS --- */
+.stats-container {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-item {
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    background: #8B1A2B;
+}
+
+/* --- TABLE --- */
+.table-container {
+    background: #F5EDD8;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #EDE0C4;
+}
+
+th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #EDE0C4;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-approved { background: #DCFCE7; color: #16A34A; }
+.badge-pending  { background: #FEF9C3; color: #CA8A04; }
+.badge-rejected { background: #FEE2E2; color: #DC2626; }
+
+/* --- MODAL --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #F5EDD8;
+    width: 500px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+/* =========================================
+   CSS CHO SUBMENU TRONG SIDEBAR (STYLE.CSS)
+   ========================================= */
+
+/* 1. Xóa khoảng trống giữa các mục để đường kẻ liền mạch */
+.submenu {
+    display: none;
+    flex-direction: column;
+    margin-left: 28px; /* Thụt lề vào cho đẹp */
+    margin-top: 4px;
+    margin-bottom: 8px;
+    gap: 0 !important; /* QUAN TRỌNG: Ép khoảng cách về 0 để viền trái chạm nhau */
+}
+
+/* Khi có class show (từ Django) thì hiển thị ra */
+.submenu.show {
+    display: flex;
+}
+
+/* 2. Tạo đường kẻ xám mờ mặc định cho TẤT CẢ mục con */
+.sub-item {
+    display: block;
+    padding: 10px 15px 10px 20px;
+    border-left: 2px solid rgba(255, 255, 255, 0.1); /* Đường viền xám mờ */
+    color: #9AA3B8;
+    font-size: 13.5px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+/* Hiệu ứng khi lướt chuột qua */
+.sub-item:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    border-left-color: rgba(255, 255, 255, 0.4); /* Sáng đường viền lên tí */
+}
+
+/* 3. Tạo vạch ĐỎ nổi bật cho mục đang chọn */
+.sub-item.active {
+    color: #fff;
+    border-left-color: var(--primary);
+    font-weight: 500;
+}
+

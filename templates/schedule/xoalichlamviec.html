@@ -1,0 +1,103 @@
+{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Xóa lịch làm việc - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/schedule_delete.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="warning-banner">
+        <span class="warning-icon">⚠️</span>
+        <span>Cảnh báo: Việc xóa lịch làm việc sẽ không thể hoàn tác. Vui lòng kiểm tra kỹ trước khi xóa.</span>
+    </div>
+
+    <div id="screen-weeks" class="panel-card">
+        <div class="panel-tab">🗑 Chọn tuần cần xóa</div>
+
+        <div class="panel-body">
+            <div class="screen-header">
+                <div class="screen-header-title">📅 Danh sách tuần làm việc</div>
+            </div>
+
+            <div class="date-input-row">
+                <div class="filter-group">
+                    <label for="filterDateFrom">Từ ngày</label>
+                    <input class="filter-input" type="date" id="filterDateFrom">
+                </div>
+
+                <div class="separator">→</div>
+
+                <div class="filter-group">
+                    <label for="filterDateTo">Đến ngày</label>
+                    <input class="filter-input" type="date" id="filterDateTo">
+                </div>
+
+                <div class="separator">hoặc</div>
+
+                <div class="filter-group">
+                    <label for="filterWeek">Chọn tuần</label>
+                    <input class="filter-input" type="week" id="filterWeek">
+                </div>
+
+                <div class="filter-btns">
+                    <button type="button" class="btn-filter" onclick="filterWeeks()">Lọc</button>
+                    <button type="button" class="btn-reset" onclick="resetFilter()">Đặt lại</button>
+                </div>
+            </div>
+
+            <div class="weeks-list" id="weeksList"></div>
+        </div>
+    </div>
+
+    <div id="screen-detail" class="panel-card" style="display: none;">
+        <div class="panel-tab">📋 Chi tiết lịch làm việc</div>
+
+        <div class="panel-body">
+            <div class="detail-controls">
+                <div class="week-label-badge">
+                    📅 <span id="detail-week-label">Tuần</span>
+                </div>
+
+                <input
+                    class="search-input"
+                    type="text"
+                    id="searchEmp"
+                    placeholder="Nhập tên nhân viên..."
+                    oninput="filterEmployees()"
+                >
+
+                <button type="button" class="btn-back" onclick="backToWeeks()">↩ Quay lại</button>
+            </div>
+
+            <div class="employee-cards" id="empCards"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-icon">🗑️</div>
+        <h3 id="modalTitle">Xác nhận xóa</h3>
+        <p id="modalMsg">Bạn có chắc muốn xóa lịch làm này không?</p>
+
+        <div class="modal-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal()">Hủy bỏ</button>
+            <button type="button" class="btn-confirm-delete" onclick="confirmDelete()">Xác nhận xóa</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const API_DELETE_WEEKS_URL = "{% url 'api_delete_schedule_weeks' %}";
+    const API_DELETE_REMOVE_URL = "{% url 'api_delete_schedule_delete' %}";
+    const API_DELETE_WEEK_DETAIL_BASE = "/schedule/api/delete-schedule/week-detail/";
+</script>
+<script src="{% static 'js/schedule_delete.js' %}?v=1"></script>
+{% endblock %}
