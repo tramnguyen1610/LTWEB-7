@@ -1,5 +1,5 @@
 from django.db import models
-from apps.employees.models import Employee
+from apps.employees.models import Employee, Position
 
 class Shift(models.Model):
     shift_id = models.AutoField(primary_key=True)
@@ -16,11 +16,13 @@ class ShiftInstance(models.Model):
     work_date = models.DateField()
 
     def __str__(self):
-        return f"{self.shift.shift_name} - {self.work_date}"
+        return f"{self.shift.shift_name} ({self.work_date})"
+
 
 class Attendance(models.Model):
     attendance_id = models.AutoField(primary_key=True)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    position = models.ForeignKey(Position, on_delete=models.CASCADE)
     shift_instance = models.ForeignKey(ShiftInstance, on_delete=models.CASCADE)
     attendance_date = models.DateField()
     check_in_time = models.TimeField(null=True, blank=True)
@@ -30,4 +32,4 @@ class Attendance(models.Model):
     status = models.CharField(max_length=20, default='present')
 
     class Meta:
-        unique_together = ('employee', 'shift_instance')
+        unique_together = ('employee', 'position', 'shift_instance', 'attendance_date')
