@@ -49,26 +49,24 @@ def dashboard_employee(request):
     return render(request, 'dashboard/dashboard_employees.html', context)
 
 @login_required
+
 def dashboard_manager(request):
-    if not request.user.is_staff:
-        return redirect('dashboard_employee')
+    # 1. Đếm tổng số nhân viên trong Database
+    total_emp = Employee.objects.count()
 
-    # Tương tự, lấy thông tin Manager từ bảng Employee
-    try:
-        employee = request.user.employee
-        display_name = employee.full_name
-    except:
-        employee = None
-        display_name = request.user.username
+    # 2. Tính số người đang làm việc và nghỉ làm ngày hôm nay (Ví dụ minh họa)
+    # Tùy vào cách nhóm Linh lưu dữ liệu chấm công mà viết QuerySet cho đúng nhé
+    # working_emp = Attendance.objects.filter(date=today, status='Đúng giờ').count()
+    # absent_emp = Attendance.objects.filter(date=today, status='Vắng mặt').count()
 
+    # Đóng gói dữ liệu gửi sang HTML
     context = {
-        'employee': employee,
-        'display_name': display_name,
-        'role_name': 'Quản lý cửa hàng',
+        'total_employees': total_emp,
+        'working_employees': 6,  # Thay bằng biến working_emp thực tế
+        'absent_employees': 2,  # Thay bằng biến absent_emp thực tế
     }
+
     return render(request, 'dashboard/dashboard_manager.html', context)
-
-
 @login_required
 def logout_view(request):
     logout(request)

@@ -1,16 +1,12 @@
-/* =========================================
-   1. KHUNG CHÍNH & SIDEBAR ACTIVE
-========================================= */
 section.content {
     padding: 20px 28px !important;
     display: flex;
     flex-direction: column;
     gap: 16px !important;
-    background: #F4F6F9; /* Màu nền xám xanh nhạt */
+    background: #8C97AA;
     height: auto;
 }
 
-/* Highlight Menu "Chỉnh sửa chấm công" ở Sidebar */
 .submenu .sub-item.active,
 .sidebar .sub-item.active {
     background: rgba(255, 255, 255, 0.05) !important;
@@ -19,11 +15,9 @@ section.content {
     font-weight: 600;
 }
 
-/* =========================================
-   2. CÁC THẺ CARD (BỘ LỌC & BẢNG)
-========================================= */
+
 .filter-card, .table-card-wrapper {
-    background: #ffffff;
+    background:#F5EDD8;;
     border-radius: 12px; padding: 18px 24px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.04);
     border: 1px solid #E5E7EB;

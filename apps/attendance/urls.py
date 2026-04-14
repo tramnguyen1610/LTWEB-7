@@ -1,19 +1,18 @@
-# apps/attendance/urls.py
 from django.urls import path
 from . import views
 
 app_name = 'attendance'
 
 urlpatterns = [
-    # Giao diện
+    path('', views.cham_cong_dashboard, name='dashboard'),
     path('xu-ly/', views.xu_ly_cham_cong, name='xu_ly_cham_cong'),
     path('chinh-sua/', views.chinh_sua_cham_cong, name='chinh_sua_cham_cong'),
-    path('xem/', views.xem_cham_cong, name='xem_cham_cong'),
+    path('xem-chi-tiet/', views.xem_cham_cong, name='xem_cham_cong'),
 
-    # API endpoints
+    # Các API xử lý file Excel
     path('api/check/', views.attendance_check, name='attendance_check'),
-    path('api/confirm/', views.attendance_confirm, name='attendance_confirm'),
-    path('api/detail/<int:employee_id>/', views.employee_attendance_detail, name='employee_attendance_detail'),
-    path('api/update/<int:attendance_id>/', views.update_attendance, name='update_attendance'),
-    path('api/delete/<int:attendance_id>/', views.delete_attendance, name='delete_attendance'),
+    path('api/confirm/', views.attendance_confirm, name='attendance_confirm'),  # DÒNG CÒN THIẾU NÈ!
+
+    # API cập nhật từ popup
+    path('api/update/<int:db_id>/', views.update_attendance_api, name='update_api'),
 ]

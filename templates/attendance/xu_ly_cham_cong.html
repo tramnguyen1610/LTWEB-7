@@ -177,8 +177,9 @@
     let detectedMonth = '{{ current_month }}';
     
     // Nối URL API từ Django sang JS
-    const CHECK_URL = "{% url 'attendance:attendance_check' %}";
-    const CONFIRM_URL = "{% url 'attendance:attendance_confirm' %}";
+
+const CHECK_URL = "{% url 'attendance:attendance_check' %}";
+const CONFIRM_URL = "{% url 'attendance:attendance_confirm' %}";
 </script>
 <script src="{% static 'js/attendance/xu_ly_cham_cong.js' %}"></script>
 {% endblock %}

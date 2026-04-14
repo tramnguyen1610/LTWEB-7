@@ -72,4 +72,4 @@ def report_view(request):
         'employee_reports': employee_reports,
         'selected_month': f"{year}-{month:02d}"
     }
-    return render(request, 'report/report.html', context)
+    return render(request, 'report/report.html')

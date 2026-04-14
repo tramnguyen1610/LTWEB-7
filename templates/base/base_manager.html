@@ -46,24 +46,24 @@
             <a class="sub-item" href="#">Tính lương</a>
         </div>
 
-        <a class="nav-item" href="#">
-            <span class="nav-icon">👥</span> Nhân viên
-        </a>
-
+        <a class="nav-item {% if 'employee' in request.resolver_match.url_name %}active{% endif %}"
+   href="{% url 'employees:employee_list' %}">
+    <span class="nav-icon">👥</span> Nhân viên
+</a>
         {% with url_name=request.resolver_match.url_name %}
-        <a class="nav-item nav-toggle {% if url_name == 'reward_create' or url_name == 'reward_list' %}active{% endif %}" href="javascript:void(0);" data-target="submenu-thuongphat">
-            <span class="nav-icon">🎁</span> Thưởng/Phạt
-        </a>
-        <div class="submenu {% if url_name == 'reward_create' or url_name == 'reward_list' %}show{% endif %}" id="submenu-thuongphat">
-            <a class="sub-item {% if url_name == 'reward_create' %}active{% endif %}" href="#">Thiết lập</a>
-            <a class="sub-item {% if url_name == 'reward_list' %}active{% endif %}" href="#">Xem thông tin</a>
-        </div>
-        {% endwith %}
+<a class="nav-item nav-toggle {% if url_name == 'reward_create' or url_name == 'reward_list' %}active{% endif %}" href="javascript:void(0);" data-target="submenu-thuongphat">
+    <span class="nav-icon">🎁</span> Thưởng/Phạt
+</a>
+<div class="submenu {% if url_name == 'reward_create' or url_name == 'reward_list' %}show{% endif %}" id="submenu-thuongphat">
+    <a class="sub-item {% if url_name == 'reward_create' %}active{% endif %}" href="{% url 'reward_create' %}">Thiết lập</a>
+    <a class="sub-item {% if url_name == 'reward_list' %}active{% endif %}" href="{% url 'reward_list' %}">Xem thông tin</a>
+</div>
+{% endwith %}
 
-        <div class="sidebar-section-label">Báo cáo</div>
-        <a class="nav-item nav-toggle" href="javascript:void(0);" data-target="submenu-baocao">
-            <span class="nav-icon">📊</span> Báo cáo nhân sự
-        </a>
+<div class="sidebar-section-label">Báo cáo</div>
+<a class="nav-item {% if request.resolver_match.url_name == 'report' %}active{% endif %}" href="{% url 'report' %}">
+    <span class="nav-icon">📊</span> Báo cáo nhân sự
+</a>
     </div>
 </aside>
 

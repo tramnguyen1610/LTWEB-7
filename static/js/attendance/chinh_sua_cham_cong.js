@@ -212,7 +212,18 @@ function openViewModal(index) {
 }
 
 // KHỞI CHẠY
-document.addEventListener('DOMContentLoaded', () => { enrichData(); renderTable(); });
+// KHỞI CHẠY
+document.addEventListener('DOMContentLoaded', () => {
+    enrichData();
+    renderTable();
+
+    // CHIÊU CUỐI: Bứng tất cả các Popup (Modal) ra ngoài cùng thẻ <body>
+    // để đảm bảo không bao giờ bị Header hay Sidebar đè lên nữa!
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        document.body.appendChild(modal);
+    });
+});
+
 document.addEventListener('click', e => {
     const wrap = document.getElementById('monthSelectWrap');
     const dp = document.getElementById('monthDropdownList');
