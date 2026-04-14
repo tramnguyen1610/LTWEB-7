@@ -20,4 +20,7 @@ urlpatterns = [
 
     # Thêm URL của app Chấm công vào đây nè:
     path('cham-cong/', include('apps.attendance.urls')),
+    path('dashboard/', include('apps.accounts.urls')),
+    path('reward-penalty/', include('apps.reward_penalty.urls')),
+    path('report/', include('apps.report.urls'))
 ]
