@@ -8,16 +8,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="breadcrumb-nav" style="margin-bottom: 16px;">
-    <a href="{% url 'dashboard_manager' %}">Trang chủ</a> / Tính lương
-</div>
-
 <div class="content">
     {% csrf_token %}
 
     <div class="tl-card">
         <h2 class="tl-card-title">🧮 Chọn kỳ tính lương</h2>
-        <p class="tl-card-subtitle">Hệ thống sẽ tự động tính dựa trên dữ liệu chấm công thật (không tính Quản lý).</p>
+
 
         <div style="display: flex; align-items: center; gap: 16px;">
             <select id="monthSelect" class="form-select" onchange="loadPreview()"
@@ -32,7 +28,7 @@
 
     <div class="tl-card preview-card" id="previewCard">
         <h2 class="tl-card-title" id="previewTitle">Dữ liệu xem trước</h2>
-        <p class="tl-card-subtitle">Các con số này được tổng hợp từ bảng Chấm công</p>
+
 
         <div class="stats-grid">
             <div class="stat-box">

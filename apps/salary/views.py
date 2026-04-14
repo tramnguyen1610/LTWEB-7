@@ -6,7 +6,8 @@ from apps.employees.models import Employee
 from apps.attendance.models import Attendance
 from .logic import calculate_payroll_data
 from decimal import Decimal
-
+from django.db.models import Sum
+from apps.reward_penalty.models import RewardPenalty
 
 # --- PHẦN 1: XEM VÀ THIẾT LẬP (ĐÃ CÓ) ---
 
@@ -161,6 +162,7 @@ def ket_qua_tinh_luong(request):
             'work_hours': total_hours,
             'total_salary': total_salary,
         })
+    data = sorted(data, key=lambda x: x['employee_id'])
 
     context = {
         'period': period,
@@ -168,6 +170,7 @@ def ket_qua_tinh_luong(request):
         'total_sum': total_salary_sum,
     }
     return render(request, 'salary/ket_qua_tinh_luong.html', context)
+
 
 def api_luu_bang_luong(request):
     if request.method == 'POST':
@@ -179,6 +182,7 @@ def api_luu_bang_luong(request):
         except:
             return JsonResponse({'status': 'error', 'message': 'Kỳ lương không hợp lệ'}, status=400)
 
+        # Lấy danh sách nhân viên có đi làm trong tháng (trừ Quản lý)
         employees = Employee.objects.filter(
             attendance__attendance_date__month=month,
             attendance__attendance_date__year=year
@@ -186,15 +190,38 @@ def api_luu_bang_luong(request):
 
         count = 0
         for emp in employees:
-            # Xóa cũ nếu có
+            # --- 1. TÍNH TỔNG THƯỞNG TRONG THÁNG ---
+            total_bonus = RewardPenalty.objects.filter(
+                employee=emp,
+                type='reward',
+                date_applied__month=month,
+                date_applied__year=year
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+            # --- 2. TÍNH TỔNG PHẠT TRONG THÁNG ---
+            total_penalty = RewardPenalty.objects.filter(
+                employee=emp,
+                type='penalty',
+                date_applied__month=month,
+                date_applied__year=year
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+            # --- 3. XÓA BẢNG LƯƠNG CŨ (NẾU CÓ) ĐỂ TÍNH LẠI MỚI ---
             Payroll.objects.filter(employee=emp, payroll_period=period).delete()
-            # Tạo mới (save sẽ tự tính)
-            Payroll.objects.create(employee=emp, payroll_period=period)
+
+            # --- 4. TẠO MỚI (TRUYỀN THÊM THƯỞNG & PHẠT VÀO) ---
+            # Hàm save() trong models.py của bạn sẽ tự tính Lương cơ bản và gom Thưởng/Phạt này để ra Thực nhận
+            Payroll.objects.create(
+                employee=emp,
+                payroll_period=period,
+                total_bonus=total_bonus,
+                total_penalty=total_penalty
+            )
             count += 1
 
         return JsonResponse({'status': 'success', 'message': f'Đã lưu bảng lương cho {count} nhân viên.'})
-    return JsonResponse({'status': 'error', 'message': 'Yêu cầu không hợp lệ'}, status=400)
 
+    return JsonResponse({'status': 'error', 'message': 'Yêu cầu không hợp lệ'}, status=400)
 
 def api_danh_sach_luong(request):
     """API trả về danh sách lương chi tiết của tháng cho giao diện Xem thông tin lương"""
@@ -221,6 +248,8 @@ def api_danh_sach_luong(request):
                 attendance_date__year=year
             ).aggregate(Sum('work_hours'))['work_hours__sum'] or 0
 
+
+
             # Lấy thông tin mức lương
             rate = emp.salary_level.base_salary if emp.salary_level else 0
             level_name = emp.salary_level.level_name if emp.salary_level else "Chưa thiết lập"
@@ -246,6 +275,9 @@ def api_danh_sach_luong(request):
                 # Dùng UI Avatars tạo ảnh đại diện tự động từ tên nhân viên
                 'avatar': f'https://ui-avatars.com/api/?name={emp.full_name}&background=8B1A2B&color=fff'
             })
+            # Sắp xếp danh sách data theo ID nhân viên trước khi gửi sang giao diện
+            data = sorted(data, key=lambda x: x['id'])
+
 
         return JsonResponse({'data': data})
     except Exception as e:

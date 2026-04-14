@@ -141,7 +141,19 @@ function closeModal() {
 }
 
 // Khởi chạy khi load trang
+// Khởi chạy khi load trang
 document.addEventListener('DOMContentLoaded', () => {
     initMonthSelect();
+
+    // ĐỌC THÁNG TỪ URL (NẾU CÓ) ĐỂ TỰ ĐỘNG CHỌN
+    const urlParams = new URLSearchParams(window.location.search);
+    const periodFromUrl = urlParams.get('period');
+
+    if (periodFromUrl) {
+        // Nếu có truyền tháng qua URL thì gán vào ô chọn
+        document.getElementById('monthSelect').value = periodFromUrl;
+    }
+
+    // Sau khi chọn đúng tháng rồi mới load dữ liệu
     loadDataByMonth();
 });

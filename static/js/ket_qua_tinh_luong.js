@@ -1,13 +1,37 @@
-// static/js/ket_qua_tinh_luong.js
 document.addEventListener('DOMContentLoaded', function() {
     const btnSave = document.getElementById('btnSave');
     if (!btnSave) return;
+
+    // Hàm gọi Toast Thông báo
+    function showToast(message, isSuccess = true) {
+        const toast = document.getElementById('customToast');
+        const toastMessage = document.getElementById('toastMessage');
+        const toastIcon = document.querySelector('.toast-icon i');
+
+        toastMessage.textContent = message;
+
+        if (isSuccess) {
+            toast.classList.remove('error');
+            toastIcon.className = 'fa-solid fa-circle-check';
+            toastIcon.style.color = '#27ae60';
+        } else {
+            toast.classList.add('error');
+            toastIcon.className = 'fa-solid fa-circle-exclamation';
+            toastIcon.style.color = '#e74c3c';
+        }
+
+        toast.classList.add('show');
+    }
 
     btnSave.addEventListener('click', function() {
         const period = btnSave.getAttribute('data-period');
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const url = btnSave.getAttribute('data-url');
         const redirectUrl = btnSave.getAttribute('data-redirect');
+
+        // Đổi text nút thành Đang lưu
+        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+        btnSave.disabled = true;
 
         fetch(url, {
             method: 'POST',
@@ -20,14 +44,22 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                alert(data.message);
-                window.location.href = redirectUrl;
+                showToast(data.message, true);
+
+                // Đợi 2 giây cho người dùng đọc xong rồi mới chuyển trang
+                setTimeout(() => {
+                    window.location.href = redirectUrl + "?period=" + period;
+                }, 2000);
             } else {
-                alert('❌ Lỗi: ' + data.message);
+                showToast(data.message, false);
+                btnSave.innerHTML = '💾 Lưu bảng lương';
+                btnSave.disabled = false;
             }
         })
         .catch(error => {
-            alert('⚠️ Có lỗi xảy ra khi lưu. Vui lòng thử lại.');
+            showToast('Có lỗi xảy ra khi lưu. Vui lòng thử lại.', false);
+            btnSave.innerHTML = '💾 Lưu bảng lương';
+            btnSave.disabled = false;
         });
     });
 });

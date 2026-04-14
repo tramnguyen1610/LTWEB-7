@@ -67,9 +67,28 @@
 .modal-overlay.show .modal-content { transform: translateY(0); }
 
 .modal-header { background: var(--sidebar-bg, #2C3142); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; color: white; }
-.modal-header h3 { font-size: 18px; font-weight: 700; margin: 0; }
-.close-btn { background: transparent; border: none; color: rgba(255,255,255,0.7); font-size: 20px; cursor: pointer; transition: 0.2s; }
-.close-btn:hover { color: white; transform: rotate(90deg); }
+.modal-header {
+    background: var(--sidebar-bg, #2C3142);
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.close-btn:hover {
+    color: white;
+    transform: rotate(90deg);
+}
 
 .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
 
