@@ -1,0 +1,89 @@
+{% extends 'base/base_manager.html' %}
+{% load static %}
+
+{% block title %}Trà Sữa Bông - Xem thông tin chấm công{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/attendance.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <input type="text" placeholder="Nhập tên hoặc mã nhân viên cần tìm..." id="searchInput" oninput="filterTable()">
+        <span class="search-icon">🔍</span>
+      </div>
+      <div class="month-select-wrap" id="monthSelectWrap">
+        <button class="month-select-btn" onclick="toggleMonthList()" id="monthSelectBtn">
+          <span id="monthSelectLabel">-- Tháng --</span><span>▾</span>
+        </button>
+        <div class="month-dropdown-list" id="monthDropdownList">
+          <div class="month-option" onclick="pickMonth(0, '-- Tất cả --')">-- Tất cả --</div>
+          <div class="month-option" onclick="pickMonth(1,'Tháng 1')">Tháng 1</div>
+          <div class="month-option" onclick="pickMonth(2,'Tháng 2')">Tháng 2</div>
+          <div class="month-option" onclick="pickMonth(3,'Tháng 3')">Tháng 3</div>
+          <div class="month-option" onclick="pickMonth(4,'Tháng 4')">Tháng 4</div>
+          <div class="month-option" onclick="pickMonth(5,'Tháng 5')">Tháng 5</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-card-title">📋 Danh sách chấm công</div>
+      <table id="attendanceTable">
+        <thead>
+          <tr>
+            <th>Ngày</th>
+            <th>Thông tin nhân viên</th>
+            <th>Giờ vào</th>
+            <th>Giờ ra</th>
+            <th>Số giờ</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="pagination" id="pagination"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="viewOverlay" onclick="closeViewOutside(event)">
+  <div class="modal view-modal">
+    <div class="modal-header">📋 Thông tin chấm công chi tiết</div>
+    <div class="modal-body">
+      <div class="form-cols">
+        <div class="form-block">
+          <div class="form-block-title">👤 Thông tin nhân viên</div>
+          <div class="form-field"><label>Mã nhân viên</label><div class="field-readonly" id="vId"></div></div>
+          <div class="form-field"><label>Họ và tên</label><div class="field-readonly" id="vName"></div></div>
+          <div class="form-field"><label>Vị trí</label><div class="field-readonly" id="vPosition">Nhân viên</div></div>
+          <div class="form-field"><label>Ca làm việc</label><div class="field-readonly" id="vShift">Ca mặc định</div></div>
+        </div>
+        <div class="form-block">
+          <div class="form-block-title">🕐 Dữ liệu ghi nhận</div>
+          <div class="form-field"><label>Ngày làm việc</label><div class="field-readonly" id="vDate"></div></div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+            <div class="form-field"><label>Giờ vào</label><div class="field-readonly" id="vIn"></div></div>
+            <div class="form-field"><label>Giờ ra</label><div class="field-readonly" id="vOut"></div></div>
+          </div>
+          <div class="form-field"><label>Tổng giờ làm</label><div class="field-readonly" id="vHours" style="color:#dc2626;font-weight:700"></div></div>
+          <div class="form-field"><label>Trạng thái</label><div class="field-readonly" id="vStatus"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeView()">Đóng</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // Hứng dữ liệu thật từ Backend đẩy sang
+        window.DJANGO_DATA = {{ attendance_json|safe }};
+    </script>
+    <script src="{% static 'js/xem_cham_cong.js' %}"></script>
+{% endblock %}
