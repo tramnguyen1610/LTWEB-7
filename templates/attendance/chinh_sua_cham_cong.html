@@ -41,7 +41,7 @@
 </div>
 
 <div class="table-card-wrapper">
-    <div class="table-card-title" style="margin-bottom: 15px; padding-left: 5px;">📋 Danh sách chi tiết</div>
+    <div class="table-card-title" style="margin-bottom: 10px;">📋 Danh sách chi tiết</div>
     <div class="table-responsive">
         <table id="attendanceTable">
             <thead>
@@ -62,116 +62,135 @@
 </div>
 
 <div class="modal-overlay" id="editModalOverlay" onclick="closeModalOutside(event, 'editModalOverlay')">
-  <div class="modal" style="width: 700px;">
-    <div class="modal-head" style="background: #8B1A2B;"><div class="modal-head-left"><h3 style="color:white;">✏️ Chỉnh sửa chấm công</h3></div><button class="modal-close" onclick="closeModal('editModalOverlay')">✕</button></div>
+  <div class="modal" style="width: 750px;">
+    <div class="modal-head">
+      <h3>✏️ Chỉnh sửa chấm công</h3>
+      <button class="modal-close" onclick="closeModal('editModalOverlay')">✕</button>
+    </div>
     <div class="modal-body">
-      <div class="info-rows">
-        <div class="info-row"><span class="ir-label">Nhân viên: </span><span class="ir-value" id="mNhanVien" style="color: #8B1A2B;"></span></div>
-        <div class="info-row"><span class="ir-label">Ngày: </span><span class="ir-value" id="mNgay"></span></div>
+      <div class="info-summary-card">
+        <div class="info-summary-line"><span>Nhân viên:</span><strong id="mNhanVien" style="color:#8B1A2B"></strong></div>
+        <div class="info-summary-line"><span>Ngày:</span><strong id="mNgay"></strong></div>
       </div>
       <input type="hidden" id="mDbId">
-      <div class="form-cols">
-        <div class="form-block">
-          <div class="form-block-title">Thông tin hiện tại</div>
-          <div class="form-field"><label>Giờ vào</label><div class="field-readonly" id="mGioVaoHT"></div></div>
-          <div class="form-field"><label>Giờ ra</label><div class="field-readonly" id="mGioRaHT"></div></div>
-          <div class="form-field"><label>Tổng giờ</label><div class="field-readonly" id="mTongGioHT"></div></div>
-          <div class="form-field"><label>Trạng thái</label><div class="field-readonly" id="mTrangThaiHT"></div></div>
+      <div class="form-grid-2">
+        <div class="form-column-card">
+          <div class="column-title">Thông tin hiện tại</div>
+          <div class="field-group"><label>Giờ vào</label><div class="input-style input-readonly" id="mGioVaoHT"></div></div>
+          <div class="field-group"><label>Giờ ra</label><div class="input-style input-readonly" id="mGioRaHT"></div></div>
+          <div class="field-group"><label>Tổng giờ</label><div class="input-style input-readonly" id="mTongGioHT"></div></div>
+          <div class="field-group"><label>Trạng thái</label><div class="input-style input-readonly" id="mTrangThaiHT"></div></div>
         </div>
-        <div class="form-block">
-          <div class="form-block-title">Thông tin chỉnh sửa</div>
-          <div class="form-field"><label>Giờ vào <span style="color:red">*</span></label><input type="time" class="field-input" id="mGioVaoNew" oninput="calcHours()"></div>
-          <div class="form-field"><label>Giờ ra <span style="color:red">*</span></label><input type="time" class="field-input" id="mGioRaNew" oninput="calcHours()"></div>
-          <div class="form-field"><label>Tổng giờ</label><input type="text" class="field-input" id="mTongGioNew" readonly style="background: #F3F4F6;"></div>
-          <div class="form-field"><label>Trạng thái</label><select class="field-select" id="mTrangThaiNew"><option value="Tự động">Tự động tính</option><option value="Đúng giờ">Đúng giờ</option><option value="Muộn giờ">Muộn giờ</option><option value="Về sớm">Về sớm</option><option value="Vắng mặt">Vắng mặt</option></select></div>
+        <div class="form-column-card">
+          <div class="column-title">Thông tin chỉnh sửa</div>
+          <div class="field-group"><label>Giờ vào <span style="color:#DC2626">*</span></label><input type="time" class="input-style" id="mGioVaoNew" oninput="calcHours()"></div>
+          <div class="field-group"><label>Giờ ra <span style="color:#DC2626">*</span></label><input type="time" class="input-style" id="mGioRaNew" oninput="calcHours()"></div>
+          <div class="field-group"><label>Tổng giờ</label><input type="text" class="input-style input-readonly" id="mTongGioNew" readonly></div>
+          <div class="field-group">
+            <label>Trạng thái</label>
+            <select class="input-style" id="mTrangThaiNew">
+              <option value="Tự động">Tự động tính</option>
+              <option value="Đúng giờ">Đúng giờ</option>
+              <option value="Muộn giờ">Muộn giờ</option>
+              <option value="Về sớm">Về sớm</option>
+              <option value="Vắng mặt">Vắng mặt</option>
+            </select>
+          </div>
         </div>
       </div>
-      <div class="reason-block"><div class="reason-label">Lý do chỉnh sửa: <span style="color:red">*</span></div><textarea class="reason-textarea" id="mLyDo" placeholder="Nhập lý do..."></textarea></div>
+      <div class="reason-card">
+        <label>Lý do chỉnh sửa: <span style="color:#DC2626">*</span></label>
+        <textarea id="mLyDo" placeholder="Nhập lý do..."></textarea>
+      </div>
     </div>
-    <div class="modal-footer"><button class="btn-cancel" onclick="closeModal('editModalOverlay')">🗑 Hủy</button><button class="btn-save" onclick="saveEdit()">💾 Lưu thay đổi</button></div>
+    <div class="modal-footer">
+      <button class="btn-huy" onclick="closeModal('editModalOverlay')">Hủy</button>
+      <button class="btn-luu" onclick="saveEdit()">Lưu thay đổi</button>
+    </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="confirmOverlay">
   <div class="confirm-box">
     <div class="confirm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></div>
-    <div class="confirm-title">Xác nhận lưu thay đổi?</div>
-    <div class="confirm-desc">Thông tin cũ sẽ được lưu vào Lịch sử chỉnh sửa.</div>
-    <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancel" onclick="closeModal('confirmOverlay')" style="flex:1;">Hủy</button><button class="btn-save" onclick="confirmSave()" style="flex:1;">Xác nhận</button></div>
+    <div style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Xác nhận lưu thay đổi?</div>
+    <div style="font-size: 13.5px; color: #6B7280; margin-bottom: 20px;">Thông tin cũ sẽ được lưu vào Lịch sử chỉnh sửa.</div>
+    <div style="display: flex; gap: 10px;">
+        <button class="btn-huy" onclick="closeModal('confirmOverlay')" style="flex:1; justify-content:center;">Hủy</button>
+        <button class="btn-luu" onclick="confirmSave()" style="flex:1; justify-content:center;">Xác nhận</button>
+    </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="historyOverlay" onclick="closeModalOutside(event, 'historyOverlay')">
-    <div class="modal" style="width: 550px;">
-      <div class="modal-head" style="background: #1F2937;"><div class="modal-head-left"><h3 style="color:white;">🕐 Lịch sử chỉnh sửa</h3></div><button class="modal-close" onclick="closeModal('historyOverlay')">✕</button></div>
-      <div class="modal-body" style="background: #F9FAFB;">
-        <div id="noHistoryMsg" style="display:none; text-align: center; padding: 30px; color: #6B7280;">📭<br>Chưa có lịch sử.</div>
-        <div id="historyDetails">
-            <div id="hTimestamp" style="font-size: 12.5px; font-weight: 700; color: #3B82F6; margin-bottom: 4px;"></div>
-            <div id="hEditBy" style="font-size: 13px; color: #4B5563; margin-bottom: 16px;"></div>
-            <div style="background: #fff; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
-              <div id="hReason" style="background: #FFFBEB; border-left: 3px solid #F59E0B; padding: 10px; font-size: 13px; color: #92400E;"></div>
+  <div class="modal" style="width: 580px;">
+    <div class="modal-head" style="background: #1F2937;">
+      <h3 style="color:white; margin:0;">🕐 Lịch sử chỉnh sửa</h3>
+      <button class="modal-close" onclick="closeModal('historyOverlay')">✕</button>
+    </div>
+    <div class="modal-body" style="background: #F4F6F9;">
+      <div class="h-user-card">
+        <div class="h-info-item"><span>Nhân viên</span><strong id="hNhanVien"></strong></div>
+        <div class="h-info-item"><span>Ngày làm việc</span><strong id="hNgay"></strong></div>
+      </div>
+      <div id="noHistoryMsg" style="display:none; text-align: center; padding: 40px; color: #9CA3AF;">
+         <div style="font-size: 40px; margin-bottom: 10px;">📭</div>Chưa có dữ liệu chỉnh sửa.
+      </div>
+      <div id="historyDetails">
+          <div id="hTimestamp" style="color:#3B82F6; font-weight:800; font-size:12px; margin-bottom:15px;"></div>
+          <div class="h-main-box">
+            <div style="font-size: 14px; font-weight: 700; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px dashed #E5E7EB;">Thông tin chỉnh sửa</div>
+            <div class="h-data-row"><label>Giờ vào</label><div class="h-val old" id="hOldIn"></div><div class="h-arrow">→</div><div class="h-val new" id="hNewIn"></div></div>
+            <div class="h-data-row"><label>Giờ ra</label><div class="h-val old" id="hOldOut"></div><div class="h-arrow">→</div><div class="h-val new" id="hNewOut"></div></div>
+            <div class="h-data-row"><label>Trạng thái</label><div class="h-val old" id="hOldStatus"></div><div class="h-arrow">→</div><div class="h-val new" id="hNewStatus"></div></div>
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1.5px solid #F3F4F6;">
+                <div style="font-size: 12.5px; font-weight: 700; color: #92400E; margin-bottom: 6px;">Lý do chỉnh sửa:</div>
+                <div class="h-reason-text" id="hReason"></div>
             </div>
-        </div>
+          </div>
       </div>
     </div>
+    <div class="modal-footer"><button class="btn-huy" onclick="closeModal('historyOverlay')">Quay lại</button></div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="viewOverlay" onclick="closeModalOutside(event, 'viewOverlay')">
   <div class="modal" style="width: 750px; max-width: 95vw;">
-    <div class="modal-head" style="background: #2C3142;">
-        <div class="modal-head-left"><h3 style="color:white;">📋 Thông tin chấm công chi tiết</h3></div>
+    <div class="modal-head">
+        <h3 style="color:white; margin:0;">📋 Thông tin chấm công</h3>
         <button class="modal-close" onclick="closeModal('viewOverlay')">✕</button>
     </div>
-    <div class="modal-body" style="background: #F9FAFB; padding: 20px;">
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-
-        <div style="background: #fff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px;">
-          <div style="font-size: 14px; font-weight: 700; color: #8B1A2B; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1.5px dashed #E5E7EB;">👤 Thông tin nhân viên</div>
-          <div class="vm-field"><label>Mã nhân viên</label><div class="vm-value" id="vId"></div></div>
-          <div class="vm-field"><label>Họ và tên</label><div class="vm-value" id="vName"></div></div>
-          <div class="vm-field"><label>Vị trí</label><div class="vm-value">Nhân viên</div></div>
-          <div class="vm-field"><label>Ca làm việc</label><div class="vm-value" id="vShift"></div></div>
-        </div>
-
-        <div style="background: #fff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px;">
-          <div style="font-size: 14px; font-weight: 700; color: #8B1A2B; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1.5px dashed #E5E7EB;">🕐 Dữ liệu ghi nhận</div>
-          <div class="vm-field"><label>Ngày làm việc</label><div class="vm-value" id="vDate"></div></div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-              <div style="display:block"><label style="margin-bottom:6px; display:block; color:#6B7280; font-size:12.5px; font-weight:600;">Giờ vào</label><div id="vIn" style="background:#F3F4F6; padding:8px; border-radius:6px; text-align:center; font-weight:700; color:#111827;"></div></div>
-              <div style="display:block"><label style="margin-bottom:6px; display:block; color:#6B7280; font-size:12.5px; font-weight:600;">Giờ ra</label><div id="vOut" style="background:#F3F4F6; padding:8px; border-radius:6px; text-align:center; font-weight:700; color:#111827;"></div></div>
-          </div>
-          <div class="vm-field"><label>Tổng giờ làm</label><div class="vm-value" id="vHours" style="color:#DC2626; font-weight: 800; font-size: 15px;"></div></div>
-          <div class="vm-field"><label>Trạng thái</label><div class="vm-value" id="vStatus"></div></div>
-          <div class="vm-field"><label>Giờ nghỉ trưa</label><div class="vm-value">1 tiếng</div></div>
-        </div>
-      </div>
-
-      <div style="background: #fff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px;">
-        <div style="font-size: 14px; font-weight: 700; color: #8B1A2B; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1.5px dashed #E5E7EB;">🕐 Lịch sử hoạt động</div>
-
-        <div style="display: flex; gap: 14px; margin-bottom: 14px;">
-            <div style="width: 14px; height: 14px; background: #8B1A2B; border-radius: 50%; margin-top: 4px; box-shadow: 0 0 0 3px rgba(139,26,43,0.1);"></div>
-            <div style="flex: 1; background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px;">
-                <div id="vTimeInLine" style="font-size: 12.5px; font-weight: 700; color: #8B1A2B; margin-bottom: 4px;"></div>
-                <div style="font-size: 13.5px; color: #374151; font-weight: 500;">✔ Chấm công vào</div>
+    <div class="modal-body" style="background: #F9FAFB;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div class="vm-card">
+                <div class="vm-card-title">👤 Thông tin nhân viên</div>
+                <div class="vm-form-group"><label>Mã nhân viên</label><div class="vm-input" id="vId"></div></div>
+                <div class="vm-form-group"><label>Họ và tên</label><div class="vm-input" id="vName"></div></div>
+                <div class="vm-form-group"><label>Vị trí</label><div class="vm-input">Pha chế</div></div>
+                <div class="vm-form-group"><label>Ca làm việc</label><div class="vm-input" id="vShift"></div></div>
+            </div>
+            <div class="vm-card">
+                <div class="vm-card-title">🕐 Thông tin chấm công</div>
+                <div class="vm-form-group"><label>Ngày làm việc</label><div class="vm-input" id="vDate"></div></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div class="vm-form-group"><label>Giờ vào</label><div class="vm-input" id="vIn" style="text-align: center;"></div></div>
+                    <div class="vm-form-group"><label>Giờ ra</label><div class="vm-input" id="vOut" style="text-align: center;"></div></div>
+                    <div class="vm-form-group"><label>Tổng giờ</label><div class="vm-input" id="vHours" style="color:#DC2626; font-weight:bold; text-align: center;"></div></div>
+                </div>
+                <div class="vm-form-group"><label>Trạng thái</label><div id="vStatus"></div></div>
+                <div class="vm-form-group"><label>Giờ nghỉ trưa</label><div class="vm-input">11:00 - 11:30 (30 phút)</div></div>
             </div>
         </div>
-
-        <div style="display: flex; gap: 14px;">
-            <div style="width: 14px; height: 14px; background: #8B1A2B; border-radius: 50%; margin-top: 4px; box-shadow: 0 0 0 3px rgba(139,26,43,0.1);"></div>
-            <div style="flex: 1; background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px;">
-                <div id="vTimeOutLine" style="font-size: 12.5px; font-weight: 700; color: #8B1A2B; margin-bottom: 4px;"></div>
-                <div style="font-size: 13.5px; color: #374151; font-weight: 500;">✔ Chấm công ra</div>
+        <div class="vm-card">
+            <div class="vm-card-title">🕐 Lịch sử hoạt động</div>
+            <div class="vm-timeline">
+                <div class="vm-tl-item"><div class="vm-tl-dot"></div><div class="vm-tl-content"><div class="vm-tl-time" id="vTimeOutLine"></div><div class="vm-tl-desc" style="color:#4B5563; font-size:13px;">✔ Chấm công ra</div></div></div>
+                <div class="vm-tl-item"><div class="vm-tl-dot gray"></div><div class="vm-tl-content"><div class="vm-tl-time" id="vBreakTime"></div><div class="vm-tl-desc" style="color:#4B5563; font-size:13px;">☕ Bắt đầu nghỉ trưa</div></div></div>
+                <div class="vm-tl-item"><div class="vm-tl-dot"></div><div class="vm-tl-content"><div class="vm-tl-time" id="vTimeInLine"></div><div class="vm-tl-desc" style="color:#4B5563; font-size:13px;">✔ Chấm công vào</div></div></div>
             </div>
         </div>
-      </div>
-
     </div>
-    <div class="modal-footer" style="background: #fff; border-radius: 0 0 16px 16px;">
-      <button class="btn-cancel" onclick="closeModal('viewOverlay')">Đóng</button>
-    </div>
+    <div class="modal-footer"><button class="btn-huy" onclick="closeModal('viewOverlay')">Đóng</button></div>
   </div>
 </div>
 

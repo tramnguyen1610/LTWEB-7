@@ -2,8 +2,6 @@ let rawData = window.DJANGO_DATA || [];
 let processedData = [];
 let filteredData = [];
 let activeShiftTab = 'Tất cả';
-
-// Phân trang
 const ROWS_PER_PAGE = 7;
 let currentPage = 1;
 
@@ -16,21 +14,26 @@ function showToast(msg, bg = '#16A34A') {
 function closeModal(modalId) { document.getElementById(modalId).classList.remove('open'); }
 function closeModalOutside(e, modalId) { if (e.target.id === modalId) closeModal(modalId); }
 
+// TIỀN XỬ LÝ DỮ LIỆU
 function enrichData() {
     processedData = rawData.map(r => {
         let shift = 'Chưa rõ'; let status = 'Đúng giờ';
         if (!r.in || r.in === '--:--' || parseFloat(r.hours) === 0) return { ...r, shift: 'Chưa rõ', autoStatus: 'Vắng mặt' };
+
         const [h, m] = r.in.split(':').map(Number);
         const timeInMins = h * 60 + m;
+
         if (timeInMins < 12 * 60) { shift = 'Ca Sáng'; if (timeInMins > (7 * 60 + 30)) status = 'Muộn giờ'; }
         else if (timeInMins < 17 * 60) { shift = 'Ca Chiều'; if (timeInMins > (12 * 60 + 30)) status = 'Muộn giờ'; }
         else { shift = 'Ca Tối'; if (timeInMins > (17 * 60 + 30)) status = 'Muộn giờ'; }
+
         let finalStatus = (r.status !== 'Đúng giờ' && r.status !== 'Vắng mặt') ? r.status : status;
         return { ...r, shift, autoStatus: finalStatus };
     });
     filteredData = [...processedData];
 }
 
+// RENDER BẢNG & PHÂN TRANG
 function renderTable() {
     const tbody = document.getElementById('tableBody');
     if (!tbody) return;
@@ -81,6 +84,7 @@ function renderPagination() {
 
 function goToPage(page) { currentPage = page; renderTable(); }
 
+// BỘ LỌC
 function setShiftTab(shiftName, btnElement) {
     activeShiftTab = shiftName;
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -109,16 +113,7 @@ function filterTable() {
     currentPage = 1; renderTable();
 }
 
-// Mấy hàm modal openViewModal, openHistoryModal, openEditModal... Linh giữ nguyên code cũ nhé!
-function openViewModal(index) {
-    const r = filteredData[index];
-    document.getElementById('vName').textContent = `${r.id} - ${r.name}`;
-    document.getElementById('vDate').textContent = `${r.day}, ${r.date}`;
-    document.getElementById('vHours').textContent = r.hours;
-    document.getElementById('vStatus').textContent = r.autoStatus;
-    document.getElementById('viewOverlay').classList.add('open');
-}
-
+// 1. MODAL CHỈNH SỬA (✏️)
 function openEditModal(index) {
     const r = filteredData[index];
     document.getElementById('mDbId').value = r.db_id;
@@ -128,9 +123,12 @@ function openEditModal(index) {
     document.getElementById('mGioRaHT').textContent = r.out;
     document.getElementById('mTongGioHT').textContent = r.hours;
     document.getElementById('mTrangThaiHT').textContent = r.autoStatus;
+
     document.getElementById('mGioVaoNew').value = r.in !== '--:--' ? r.in : '';
     document.getElementById('mGioRaNew').value = r.out !== '--:--' ? r.out : '';
     document.getElementById('mTrangThaiNew').value = 'Tự động';
+    document.getElementById('mLyDo').value = '';
+    calcHours();
     document.getElementById('editModalOverlay').classList.add('open');
 }
 
@@ -147,11 +145,17 @@ function calcHours() {
     } else { tong.value = ''; }
 }
 
-function saveEdit() { document.getElementById('confirmOverlay').classList.add('open'); }
+function saveEdit() {
+    if (!document.getElementById('mLyDo').value.trim()) { showToast('⚠️ Nhập lý do!', '#D97706'); return; }
+    document.getElementById('confirmOverlay').classList.add('open');
+}
 
 async function confirmSave() {
     const db_id = document.getElementById('mDbId').value;
     const payload = { check_in: document.getElementById('mGioVaoNew').value, check_out: document.getElementById('mGioRaNew').value, reason: document.getElementById('mLyDo').value };
+    const st = document.getElementById('mTrangThaiNew').value;
+    if (st !== 'Tự động') payload.status = st;
+
     try {
         const response = await fetch(`/cham-cong/api/update/${db_id}/`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN }, body: JSON.stringify(payload) });
         const data = await response.json();
@@ -159,4 +163,58 @@ async function confirmSave() {
     } catch (error) { console.error(error); }
 }
 
+// 2. MODAL LỊCH SỬ (🕐)
+function openHistoryModal(index) {
+    const r = filteredData[index];
+    document.getElementById('hNhanVien').textContent = `${r.id} - ${r.name}`;
+    document.getElementById('hNgay').textContent = `${r.day}, ${r.date}`;
+
+    if (r.edit_history) {
+        const hist = r.edit_history;
+        document.getElementById('hTimestamp').textContent = hist.time || "Vừa xong";
+        document.getElementById('hOldIn').textContent = hist.old_in || '--:--';
+        document.getElementById('hNewIn').textContent = hist.new_in || '--:--';
+        document.getElementById('hOldOut').textContent = hist.old_out || '--:--';
+        document.getElementById('hNewOut').textContent = hist.new_out || '--:--';
+        document.getElementById('hOldStatus').textContent = hist.old_status || '---';
+        document.getElementById('hNewStatus').textContent = hist.new_status || '---';
+        document.getElementById('hReason').textContent = hist.reason || 'Không có';
+        document.getElementById('historyDetails').style.display = 'block';
+        document.getElementById('noHistoryMsg').style.display = 'none';
+    } else {
+        document.getElementById('historyDetails').style.display = 'none';
+        document.getElementById('noHistoryMsg').style.display = 'block';
+    }
+    document.getElementById('historyOverlay').classList.add('open');
+}
+
+// 3. MODAL THÔNG TIN CHẤM CÔNG (👁)
+function openViewModal(index) {
+    const r = filteredData[index];
+    document.getElementById('vId').textContent = r.id;
+    document.getElementById('vName').textContent = r.name;
+    document.getElementById('vShift').textContent = r.shift;
+    document.getElementById('vDate').textContent = `${r.day}, ${r.date}`;
+    document.getElementById('vIn').textContent = r.in;
+    document.getElementById('vOut').textContent = r.out;
+    document.getElementById('vHours').textContent = r.hours + ' giờ';
+
+    let badgeClass = 'badge-green';
+    if (r.autoStatus === 'Vắng mặt') badgeClass = 'badge-red';
+    if (r.autoStatus === 'Muộn giờ' || r.autoStatus === 'Về sớm') badgeClass = 'badge-warning';
+    document.getElementById('vStatus').innerHTML = `<span class="badge ${badgeClass}" style="font-size: 13.5px; padding: 8px 16px;">${r.autoStatus}</span>`;
+
+    document.getElementById('vTimeOutLine').textContent = r.out !== '--:--' ? `${r.out} - ${r.date}` : 'Chưa ghi nhận';
+    document.getElementById('vBreakTime').textContent = `11:00 - ${r.date}`;
+    document.getElementById('vTimeInLine').textContent = r.in !== '--:--' ? `${r.in} - ${r.date}` : 'Chưa ghi nhận';
+
+    document.getElementById('viewOverlay').classList.add('open');
+}
+
+// KHỞI CHẠY
 document.addEventListener('DOMContentLoaded', () => { enrichData(); renderTable(); });
+document.addEventListener('click', e => {
+    const wrap = document.getElementById('monthSelectWrap');
+    const dp = document.getElementById('monthDropdownList');
+    if (wrap && dp && !wrap.contains(e.target)) dp.classList.remove('open');
+});
