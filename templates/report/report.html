@@ -1,0 +1,190 @@
+{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Báo cáo nhân sự - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Filter Bar */
+    .filter-bar {
+        background: rgba(255,255,255,0.92);
+        border-radius: 14px;
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        margin-bottom: 20px;
+    }
+    .filter-select {
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1.5px solid #D1D5DB;
+        font-size: 13px;
+        outline: none;
+    }
+
+    /* Stat Cards */
+    .stat-cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+    .stat-card {
+        background: #F5EDD8;
+        border-radius: 14px;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: transform 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); }
+    .stat-info .stat-value { font-size: 24px; font-weight: 800; color: #1E2235; }
+    .stat-info .stat-label { font-size: 12px; color: #6B7280; font-weight: 600; }
+
+    /* Main Table Card */
+    .full-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        margin-bottom: 20px;
+    }
+
+    .chip { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .chip-green { background: rgba(39,174,96,0.12); color: #1e8449; }
+    .chip-orange { background: rgba(230,126,34,0.12); color: #ca6f1e; }
+    .chip-red { background: rgba(231,76,60,0.12); color: #c0392b; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    thead th { background: #2C3142; color: #fff; padding: 14px; text-align: left; font-size: 13px; border-radius: 0; }
+    thead th:first-child { border-top-left-radius: 8px; }
+    thead th:last-child { border-top-right-radius: 8px; }
+
+    td { padding: 14px; border-bottom: 1px solid #F3F4F6; font-size: 13.5px; color: #374151; }
+    tr:hover td { background: #F9FAFB; }
+
+    /* Chart Section */
+    .chart-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .bar-track { flex: 1; height: 10px; background: #F3F4F6; border-radius: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px; color: white;">
+    <h2 style="font-size: 24px; font-weight: 800;">Báo cáo nhân sự</h2>
+    <span style="opacity: 0.8;">Trang chủ / Báo cáo nhân sự</span>
+</div>
+
+<form method="GET" class="filter-bar">
+    <label style="font-weight: 700;">Kỳ báo cáo:</label>
+    <input type="month" name="month" class="filter-select" value="{{ selected_month }}">
+    <button type="submit" style="background: #8B1A2B; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 700;">🔍 Xem báo cáo</button>
+</form>
+
+<div class="stat-cards">
+    <div class="stat-card">
+        <div style="font-size: 30px;">👥</div>
+        <div class="stat-info">
+            <div class="stat-value">{{ total_employees }}</div>
+            <div class="stat-label">Tổng nhân viên</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div style="font-size: 30px;">✅</div>
+        <div class="stat-info">
+            <div class="stat-value">{{ attendance_rate }}%</div>
+            <div class="stat-label">Chuyên cần</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div style="font-size: 30px;">⚠️</div>
+        <div class="stat-info">
+            <div class="stat-value">{{ total_late_count }}</div>
+            <div class="stat-label">Lượt đi trễ</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div style="font-size: 30px;">💰</div>
+        <div class="stat-info">
+            <div class="stat-value">{{ total_salary_sum|floatformat:0 }}đ</div>
+            <div class="stat-label">Tổng lương chi</div>
+        </div>
+    </div>
+</div>
+
+<div class="full-card">
+    <h3 style="margin-bottom: 15px; color: #1E2235;">📋 Chi tiết nhân viên kỳ {{ selected_month }}</h3>
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Họ và tên</th>
+                    <th>Ngày công</th>
+                    <th>Thưởng</th>
+                    <th>Phạt</th>
+                    <th>Thực nhận</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rep in employee_reports %}
+                <tr>
+                    <td><b>{{ rep.full_name }}</b></td>
+                    <td>{{ rep.attendance_count }} ca</td>
+                    <td style="color: #27ae60;">{% if rep.reward > 0 %}+{{ rep.reward|floatformat:0 }}đ{% else %}-{% endif %}</td>
+                    <td style="color: #e74c3c;">{% if rep.penalty > 0 %}-{{ rep.penalty|floatformat:0 }}đ{% else %}-{% endif %}</td>
+                    <td><b>{{ rep.net_salary|floatformat:0 }}đ</b></td>
+                    <td>
+                        {% if rep.attendance_count >= 24 %}
+                            <span class="chip chip-green">Đủ công</span>
+                        {% else %}
+                            <span class="chip chip-orange">Thiếu công</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 30px; color: #999;">Không có dữ liệu trong kỳ này.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="chart-wrap">
+    <div class="full-card">
+        <h4 style="margin-bottom: 15px;">🎁 Phân bổ thưởng</h4>
+        <div class="bar-row">
+            <span style="width: 100px; font-size: 12px; font-weight: 600;">Chuyên cần</span>
+            <div class="bar-track"><div class="bar-fill" style="width: 85%; background: #27ae60;"></div></div>
+            <span style="font-size: 12px; font-weight: 700;">85%</span>
+        </div>
+        <div class="bar-row">
+            <span style="width: 100px; font-size: 12px; font-weight: 600;">Trách nhiệm</span>
+            <div class="bar-track"><div class="bar-fill" style="width: 15%; background: #2ecc71;"></div></div>
+            <span style="font-size: 12px; font-weight: 700;">15%</span>
+        </div>
+    </div>
+
+    <div class="full-card">
+        <h4 style="margin-bottom: 15px;">⚠️ Nguyên nhân phạt</h4>
+        <div class="bar-row">
+            <span style="width: 100px; font-size: 12px; font-weight: 600;">Đi trễ</span>
+            <div class="bar-track"><div class="bar-fill" style="width: 70%; background: #e74c3c;"></div></div>
+            <span style="font-size: 12px; font-weight: 700;">70%</span>
+        </div>
+        <div class="bar-row">
+            <span style="width: 100px; font-size: 12px; font-weight: 600;">Vi phạm nội quy</span>
+            <div class="bar-track"><div class="bar-fill" style="width: 30%; background: #c0392b;"></div></div>
+            <span style="font-size: 12px; font-weight: 700;">30%</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

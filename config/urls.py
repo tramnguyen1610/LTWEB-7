@@ -6,4 +6,7 @@ urlpatterns = [
     path('', include('apps.accounts.urls')),
 
     path('cham-cong/', include('apps.attendance.urls')),
+    path('dashboard/', include('apps.accounts.urls')),
+    path('reward-penalty/', include('apps.reward_penalty.urls')),
+    path('report/', include('apps.report.urls'))
 ]
