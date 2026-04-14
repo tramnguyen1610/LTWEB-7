@@ -1,21 +1,41 @@
-// static/js/main.js
-// Tự động ẩn alert sau 3 giây
-setTimeout(function() {
-    let alerts = document.querySelectorAll('.alert');
-    alerts.forEach(function(alert) {
-        let bsAlert = new bootstrap.Alert(alert);
-        bsAlert.close();
-    });
-}, 3000);
-
-// Active menu dựa trên URL hiện tại
 document.addEventListener('DOMContentLoaded', function() {
-    let currentPath = window.location.pathname;
-    let navLinks = document.querySelectorAll('.sidebar .nav-link');
 
-    navLinks.forEach(function(link) {
-        if (link.getAttribute('href') === currentPath) {
-            link.classList.add('active');
-        }
+    // 1. Xử lý Menu con (Submenu)
+    const navToggles = document.querySelectorAll('.nav-toggle');
+    const allSubmenus = document.querySelectorAll('.submenu');
+
+    navToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault(); // Ngăn trang bị nhảy lên đầu
+
+            const targetId = this.getAttribute('data-target');
+            const targetSubmenu = document.getElementById(targetId);
+
+            // Đóng các menu khác
+            allSubmenus.forEach(sub => {
+                if (sub.id !== targetId) sub.classList.remove('show');
+            });
+
+            // Bật/Tắt menu hiện tại
+            targetSubmenu.classList.toggle('show');
+        });
     });
+
+    // 2. Xử lý Dropdown Đăng xuất
+    const userBtn = document.getElementById('userMenuBtn');
+    const logoutDrop = document.getElementById('logoutDropdown');
+
+    if (userBtn) {
+        userBtn.addEventListener('click', function(e) {
+            logoutDrop.classList.toggle('show');
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', () => logoutDrop.classList.remove('show'));
+    }
+
+    // 3. Tự động ẩn Alert
+    setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(a => a.style.display = 'none');
+    }, 3000);
 });
