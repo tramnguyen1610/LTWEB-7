@@ -1,0 +1,484 @@
+:root {
+    --primary: #8B1A2B;
+    --primary-dark: #6B1220;
+    --content-bg: #8C97AA;
+    --white: #fff;
+    --text-dark: #1E2235;
+    --text-muted: #6B7280;
+    --icon-circle: #2C3142;
+    --icon-accent: #C8A84B;
+    --border-color: #E5E7EB;
+}
+
+/* ── LAYOUT CHÍNH ── */
+.schedule-page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Thu nhỏ khoảng cách giữa các block để tiết kiệm không gian */
+}
+
+/* ── TOP PANEL (LỊCH & THIẾT LẬP) ── */
+.top-panel {
+    display: grid;
+    grid-template-columns: 280px 1fr; /* Tăng nhẹ chiều rộng lịch để vừa vặn hơn */
+    gap: 16px;
+    align-items: stretch;
+    flex-shrink: 0;
+}
+
+.calendar-card,
+.setup-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 12px; /* Thu gọn padding để tiết kiệm chiều cao */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── CALENDAR (LỊCH) ── */
+.cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.cal-nav-btn {
+    background: #F3F4F6;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 12px;
+    color: var(--text-dark);
+    transition: 0.2s;
+}
+
+.cal-nav-btn:hover {
+    background: #E5E7EB;
+}
+
+.cal-month-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    background: #FFF0F2;
+    padding: 4px 14px;
+    border-radius: 20px;
+}
+
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    text-align: center;
+}
+
+.cal-day-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    padding: 6px 0;
+}
+
+.cal-day {
+    font-size: 12px;
+    padding: 4px 0; /* Ép mỏng lại chiều cao các ngày */
+    border-radius: 6px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.cal-day:hover:not(.today):not(.empty) {
+    background: #F9FAFB;
+}
+
+.cal-day.today {
+    background: var(--primary);
+    color: var(--white);
+    font-weight: bold;
+}
+
+.cal-day.selected-week {
+    background: #FDECEA;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* ── SETUP CARD (THIẾT LẬP NHÂN SỰ) ── */
+.setup-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px; /* Giảm khoảng cách */
+}
+
+.ca-select {
+    width: 100%;
+    padding: 6px 12px; /* Gọn lại */
+    font-size: 13px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 8px; /* Giảm khoảng cách */
+    outline: none;
+    cursor: pointer;
+}
+
+.ca-select:focus {
+    border-color: var(--primary);
+}
+
+.pos-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 4px; /* Ép các hàng sát lại nhau hơn */
+    border-bottom: 1px dashed var(--border-color); /* Kẻ đứt nét dẫn mắt */
+    font-size: 13px;
+    color: var(--text-dark);
+}
+
+.pos-row:last-child {
+    border-bottom: none;
+}
+
+.qty-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--white);
+}
+
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark);
+    background: #F9FAFB;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.qty-btn:hover {
+    background: #E5E7EB;
+    color: var(--primary);
+}
+
+.qty-btn:first-child { border-radius: 5px 0 0 5px; }
+.qty-btn:last-child { border-radius: 0 5px 5px 0; }
+
+.qty-val {
+    font-size: 13px;
+    font-weight: 700;
+    min-width: 32px;
+    text-align: center;
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+}
+
+/* ── OVERVIEW (TỔNG QUAN) ── */
+.overview-card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    max-height: 270px; /* Cố định lại chiều cao để chừa chỗ cho 2 nút bấm */
+    min-height: 200px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.overview-header {
+    background: var(--primary);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0; /* Header không bị bóp méo */
+}
+
+.ov-table-wrap {
+    overflow-y: auto;
+    overflow-x: auto;
+    max-height: 225px; /* Giới hạn vùng cuộn của bảng */
+}
+
+.ov-table {
+    width: 100%;
+    min-width: 900px; /* Bảng không bị co dúm lại, tự động tạo thanh cuộn ngang */
+    border-collapse: collapse;
+    font-size: 12px; /* Tăng size chữ dễ nhìn */
+}
+
+.ov-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--icon-circle);
+    color: var(--white);
+    padding: 8px 10px;
+    text-align: center;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.ov-table tbody td {
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid #F3F4F6;
+    border-right: 1px solid #F3F4F6;
+    color: var(--text-dark);
+}
+
+
+/* ========================================= */
+/* --- BẮT ĐẦU FIX LỖI LỆCH CỘT ROWSPAN ---- */
+/* ========================================= */
+
+.col-calam {
+    text-align: left !important;
+    font-weight: 700;
+    width: 70px;
+    position: sticky;
+    left: 0;
+    background: var(--white);
+    z-index: 4;
+}
+
+.col-vitri {
+    width: 90px;
+    text-align: left !important;
+    padding-left: 12px !important;
+}
+
+.ov-table thead th:nth-child(1) {
+    text-align: left;
+    width: 70px;
+    position: sticky;
+    left: 0;
+    z-index: 6;
+    background: var(--icon-circle);
+}
+
+.ov-table thead th:nth-child(2) {
+    text-align: left;
+    width: 90px;
+    padding-left: 12px;
+}
+
+/* Ép canh giữa cho các ô chứa số lượng (bỏ qua cột ca làm và vị trí) */
+.ov-table tbody td:not(.col-calam):not(.col-vitri) {
+    text-align: center !important;
+}
+
+/* ========================================= */
+/* --- KẾT THÚC FIX LỖI LỆCH CỘT ROWSPAN --- */
+/* ========================================= */
+
+
+/* Định dạng màu chữ */
+.ca-sang { color: #D97706; font-weight: 700; }
+.ca-chieu { color: #0284C7; font-weight: 700; }
+.ca-toi { color: #7C3AED; font-weight: 700; }
+
+/* Làm mờ các ô số 0 */
+.val-zero {
+    color: #D1D5DB !important;
+    font-weight: 400 !important;
+}
+
+/* Tùy chỉnh Scrollbar cho bảng */
+.ov-table-wrap::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+}
+.ov-table-wrap::-webkit-scrollbar-track {
+    background: #F9FAFB;
+}
+.ov-table-wrap::-webkit-scrollbar-thumb {
+    background: #D1D5DB;
+    border-radius: 999px;
+}
+.ov-table-wrap::-webkit-scrollbar-thumb:hover {
+    background: #9CA3AF;
+}
+
+/* ── ACTIONS (NÚT BẤM) ── */
+.bottom-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 4px 0 10px; /* Ép nút bấm lên gần bảng hơn */
+    flex-shrink: 0;
+}
+
+.btn-huy,
+.btn-luu {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tải lại data - Nút viền trung tính */
+.btn-huy {
+    background: var(--white);
+    color: var(--text-dark);
+    border: 1px solid #D1D5DB;
+}
+
+.btn-huy:hover {
+    background: #F3F4F6;
+}
+
+/* Nút lưu - Màu xanh lá */
+.btn-luu {
+    background: #16A34A;
+    color: var(--white);
+    border: none;
+}
+
+.btn-luu:hover {
+    background: #15803D;
+}
+
+/* ── TOAST (THÔNG BÁO) ── */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #10B981;
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===== FIX KHÔNG BỊ CHE + COMPACT UI ===== */
+
+/* layout chính */
+.schedule-page {
+    height: calc(100vh - 90px);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;              /* giảm khoảng cách */
+    overflow: hidden;
+}
+
+/* khối trên nhỏ lại */
+.top-panel {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* card trên */
+.calendar-card,
+.setup-card {
+    padding: 8px 10px;     /* ↓ padding */
+}
+
+/* lịch nhỏ lại */
+.cal-header {
+    margin-bottom: 6px;
+}
+
+.cal-day-name {
+    font-size: 10px;
+    padding: 2px 0;
+}
+
+.cal-day {
+    font-size: 11px;
+    padding: 2px 0;
+}
+
+/* setup nhỏ lại */
+.setup-title {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.ca-select {
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+/* từng dòng nhân sự gọn lại */
+.pos-row {
+    padding: 4px 4px;
+    margin-bottom: 2px;
+    font-size: 12px;
+}
+
+/* nút +/- nhỏ lại */
+.qty-btn {
+    width: 24px;
+    height: 22px;
+}
+
+.qty-val {
+    min-width: 26px;
+    font-size: 12px;
+}
+
+/* ===== QUAN TRỌNG: BẢNG LẤY PHẦN CÒN LẠI ===== */
+.overview-card {
+    flex: 1;
+    min-height: 0;
+}
+
+/* vùng cuộn */
+.ov-table-wrap {
+    height: 100%;
+    overflow: auto;
+}
+
+/* bảng compact hơn */
+.ov-table {
+    font-size: 11px;
+}
+
+.ov-table thead th {
+    padding: 6px 8px;
+}
+
+.ov-table tbody td {
+    padding: 6px 8px;
+}
+
+/* nút dưới */
+.bottom-actions {
+    padding: 4px 0 6px;
+}

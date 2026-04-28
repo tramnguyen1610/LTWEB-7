@@ -1,0 +1,509 @@
+:root {
+  --primary: #8B1A2B;
+  --primary-dark: #6B1220;
+  --primary-light: #A52035;
+  --sidebar-bg: #2C3142;
+  --sidebar-text: #B8BFCE;
+  --sidebar-active: #8B1A2B;
+  --card-bg: #F5EDD8;
+  --card-bg-hover: #EDE0C4;
+  --body-bg: #9AA5B8;
+  --content-bg: #8C97AA;
+  --white: #fff;
+  --text-dark: #1E2235;
+  --text-muted: #6B7280;
+  --icon-circle: #2C3142;
+  --icon-accent: #C8A84B;
+}
+
+.employee-management {
+  padding: 0;
+}
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  flex: 1;
+  position: relative;
+  max-width: 600px;
+}
+
+.search-box form {
+  width: 100%;
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 11px 44px 11px 16px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.9);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 13.5px;
+  color: var(--text-dark);
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.search-box input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(139,26,43,0.12);
+  background: #fff;
+}
+
+.search-box input::placeholder {
+  color: #9CA3AF;
+}
+
+.search-icon {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 17px;
+  color: var(--primary);
+  pointer-events: none;
+}
+
+.btn-create {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  background: var(--icon-circle);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-create:hover {
+  background: #1a1f30;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+
+/* ── TABLE CARD ── */
+.table-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.table-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 18px;
+}
+
+.table-card-title span {
+  font-size: 20px;
+}
+
+/* ── BẢNG DỮ LIỆU & THANH CUỘN (ĐÃ FIX LỖI) ── */
+.employee-table-scroll {
+  max-height: 380px; /* Chiều cao hiển thị bảng (khoảng 6-7 dòng) */
+  overflow-y: auto;  /* Hiển thị thanh cuộn dọc */
+  overflow-x: auto;  /* Hiển thị thanh cuộn ngang nếu màn nhỏ */
+  border-radius: 10px;
+  background: var(--white); /* Nền trắng cho bảng */
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+table {
+  width: 100%;
+  min-width: 900px; /* Ép bảng không bị bóp méo cột, sẽ cuộn ngang nếu màn hình hẹp */
+  border-collapse: collapse;
+}
+
+thead tr {
+  background: var(--primary);
+}
+
+/* Giữ Header đứng yên khi cuộn dọc */
+.employee-table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--primary); /* Phải thêm dòng này để header không bị trong suốt khi cuộn */
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Tạo bóng nhỏ phân cách header với nội dung */
+}
+
+/* Tùy chỉnh thanh cuộn cho đẹp */
+.employee-table-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.employee-table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(139, 26, 43, 0.45);
+  border-radius: 10px;
+}
+
+.employee-table-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 10px;
+}
+
+/* ── CHI TIẾT Ô TRONG BẢNG ── */
+tbody tr {
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  transition: background 0.18s;
+}
+
+tbody tr:hover {
+  background: rgba(139,26,43,0.04);
+}
+
+tbody tr:last-child {
+  border-bottom: none;
+}
+
+tbody td {
+  padding: 12px 14px;
+  font-size: 13.5px;
+  color: var(--text-dark);
+}
+
+tbody td:first-child {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+tbody td:last-child {
+  text-align: center;
+}
+
+/* action buttons */
+.action-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.18s;
+  text-decoration: none;
+}
+
+.btn-view {
+  background: var(--icon-circle);
+  color: #fff;
+}
+
+.btn-view:hover {
+  background: #1a1f30;
+  transform: scale(1.1);
+}
+
+.btn-edit {
+  background: #F3A4A4;
+  color: #fff;
+}
+
+.btn-edit:hover {
+  background: #e87c7c;
+  transform: scale(1.1);
+}
+
+.btn-delete {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-delete:hover {
+  background: var(--primary-dark);
+  transform: scale(1.1);
+}
+
+/* ── PAGINATION ── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 18px;
+}
+
+.page-btn {
+  padding: 7px 13px;
+  border-radius: 7px;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.7);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.page-btn:hover {
+  background: #fff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.page-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.page-btn.nav-pg {
+  color: var(--text-muted);
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── POPUP OVERLAY ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay.show {
+  display: flex;
+}
+
+/* ── DELETE CONFIRM POPUP ── */
+.popup-confirm {
+  background: #fff;
+  border-radius: 20px;
+  padding: 36px 32px 28px;
+  width: 340px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  animation: popIn 0.22s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.88); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.popup-warn-icon {
+  font-size: 44px;
+  margin-bottom: 10px;
+}
+
+.popup-confirm h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.popup-confirm p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.popup-nv-name {
+  background: #F5F5F5;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.popup-nv-name .pn-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.popup-nv-name .pn-code {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.btn-xoa {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: background 0.2s;
+}
+
+.btn-xoa:hover {
+  background: var(--primary-dark);
+}
+
+.btn-huy {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.2s;
+}
+
+.btn-huy:hover {
+  color: var(--text-dark);
+}
+
+/* ── SUCCESS TOAST ── */
+.toast {
+  display: none;
+  position: fixed;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1.5px solid var(--primary);
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  z-index: 1100;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+  white-space: nowrap;
+  animation: slideDown 0.25s ease;
+}
+
+@keyframes slideDown {
+  from { top: 10px; opacity: 0; }
+  to { top: 28px; opacity: 1; }
+}
+
+/* search highlight */
+.highlight {
+  background: #FCEABB;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.9);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.clear-filter {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 13px;
+  padding: 10px 14px;
+}
+
+.clear-filter:hover {
+  text-decoration: underline;
+}
+
+.search-result-info {
+  background: rgba(255,255,255,0.7);
+  padding: 10px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--text-dark);
+}
+
+.no-result {
+  text-align: center;
+  padding: 50px;
+  color: var(--text-muted);
+}
+
+.no-result a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.status-active {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.status-probation {
+  color: #ffc107;
+  font-weight: 500;
+}
+
+.employee-table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+}
+
+.employee-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}

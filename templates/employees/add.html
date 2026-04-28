@@ -1,0 +1,249 @@
+{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Thêm nhân viên - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/employees/employee_add.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <div class="form-header">
+    <h2>➕ Thêm nhân viên mới</h2>
+
+  </div>
+
+  <form method="POST" id="employeeForm">
+    {% csrf_token %}
+
+    <div class="form-body">
+      <div class="two-columns">
+        <!-- Cột trái -->
+        <div class="info-card">
+          <div class="card-title">📋 Thông tin cá nhân</div>
+          <div class="card-body">
+            <div class="field">
+              <label>Họ và tên <span class="required">*</span></label>
+              <input type="text" name="full_name" id="fullName" placeholder="Nhập họ và tên">
+              <div class="error-msg" id="errFullName">⚠ Vui lòng nhập họ và tên</div>
+            </div>
+
+            <div class="field">
+              <label>Số CCCD <span class="required">*</span></label>
+              <input type="text" name="citizen_id" id="citizenId" placeholder="12 số" maxlength="12">
+              <div class="error-msg" id="errCitizenId">⚠ Vui lòng nhập 12 số CCCD</div>
+            </div>
+
+            <div class="field">
+              <label>Ngày sinh</label>
+              <input type="date" name="date_of_birth">
+            </div>
+
+            <div class="field">
+              <label>Giới tính <span class="required">*</span></label>
+              <div class="gender-group">
+                <label><input type="radio" name="gender" value="M"> Nam</label>
+                <label><input type="radio" name="gender" value="F"> Nữ</label>
+                <label><input type="radio" name="gender" value="O"> Khác</label>
+              </div>
+              <div class="error-msg" id="errGender">⚠ Vui lòng chọn giới tính</div>
+            </div>
+
+            <div class="field">
+              <label>Số điện thoại <span class="required">*</span></label>
+              <input type="tel" name="phone_number" id="phone" placeholder="0xxxxxxxxx" maxlength="10">
+              <div class="error-msg" id="errPhone">⚠ Số điện thoại phải có 10 số, bắt đầu bằng 0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cột phải -->
+        <div class="info-card">
+          <div class="card-title">💼 Thông tin công việc</div>
+          <div class="card-body">
+            <div class="field">
+              <label>Số tài khoản</label>
+              <input type="text" name="bank_account" placeholder="Nhập số tài khoản">
+            </div>
+
+            <div class="field">
+              <label>Tên ngân hàng</label>
+              <input type="text" name="bank_name" placeholder="Nhập tên ngân hàng">
+            </div>
+
+            <div class="field">
+              <label>Vị trí <span class="required">*</span></label>
+              <select name="position" id="position">
+                <option value="">-- Chọn vị trí --</option>
+                {% for pos in positions %}
+                <option value="{{ pos.position_id }}">{{ pos.position_name }}</option>
+                {% endfor %}
+              </select>
+              <div class="error-msg" id="errPosition">⚠ Vui lòng chọn vị trí</div>
+            </div>
+
+            <div class="field">
+              <label>Ngày vào làm</label>
+              <input type="date" name="hire_date">
+            </div>
+
+            <div class="field">
+              <label>Tình trạng</label>
+              <select name="status">
+                <option value="probation">Thử việc</option>
+                <option value="official">Chính thức</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phần tài khoản -->
+      <div class="account-card">
+        <div class="account-title">👤 Thông tin tài khoản</div>
+        <div class="account-body">
+          <div class="field">
+            <label>Tên đăng nhập <span class="required">*</span></label>
+            <input type="text" name="username" id="username" placeholder="Nhập tên đăng nhập">
+            <div class="error-msg" id="errUsername">⚠ Vui lòng nhập tên đăng nhập</div>
+          </div>
+          <div class="field">
+            <label>Mật khẩu <span class="required">*</span></label>
+            <div class="password-wrapper">
+              <input type="password" name="password" id="password" placeholder="Ít nhất 6 ký tự">
+              <button type="button" class="toggle-pwd" onclick="togglePassword()">👁</button>
+            </div>
+            <div class="error-msg" id="errPassword">⚠ Mật khẩu phải có ít nhất 6 ký tự</div>
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="example@email.com">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a href="{% url 'employees:employee_list' %}" class="btn-cancel">❌ Hủy bỏ</a>
+      <button type="submit" class="btn-save">💾 Lưu nhân viên</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  function togglePassword() {
+    const pwd = document.getElementById('password');
+    if (pwd) pwd.type = pwd.type === 'password' ? 'text' : 'password';
+  }
+
+  document.getElementById('employeeForm').addEventListener('submit', function(e) {
+    let valid = true;
+
+    // Validate họ tên
+    const fullName = document.getElementById('fullName')?.value.trim();
+    if (!fullName) {
+      document.getElementById('errFullName')?.classList.add('show');
+      document.getElementById('fullName')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errFullName')?.classList.remove('show');
+      document.getElementById('fullName')?.classList.remove('error');
+    }
+
+    // Validate CCCD
+    const citizenId = document.getElementById('citizenId')?.value.trim();
+    if (!citizenId || !/^\d{12}$/.test(citizenId)) {
+      document.getElementById('errCitizenId')?.classList.add('show');
+      document.getElementById('citizenId')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errCitizenId')?.classList.remove('show');
+      document.getElementById('citizenId')?.classList.remove('error');
+    }
+
+    // Validate giới tính
+    const gender = document.querySelector('input[name="gender"]:checked');
+    if (!gender) {
+      document.getElementById('errGender')?.classList.add('show');
+      valid = false;
+    } else {
+      document.getElementById('errGender')?.classList.remove('show');
+    }
+
+    // Validate số điện thoại
+    const phone = document.getElementById('phone')?.value.trim();
+    if (!phone || !/^0\d{9}$/.test(phone)) {
+      document.getElementById('errPhone')?.classList.add('show');
+      document.getElementById('phone')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errPhone')?.classList.remove('show');
+      document.getElementById('phone')?.classList.remove('error');
+    }
+
+    // Validate vị trí
+    const position = document.getElementById('position')?.value;
+    if (!position) {
+      document.getElementById('errPosition')?.classList.add('show');
+      document.getElementById('position')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errPosition')?.classList.remove('show');
+      document.getElementById('position')?.classList.remove('error');
+    }
+
+    // Validate tên đăng nhập (chỉ khi thêm mới)
+    {% if not is_edit %}
+    const username = document.getElementById('username')?.value.trim();
+    if (!username) {
+      document.getElementById('errUsername')?.classList.add('show');
+      document.getElementById('username')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errUsername')?.classList.remove('show');
+      document.getElementById('username')?.classList.remove('error');
+    }
+
+    // Validate mật khẩu (chỉ khi thêm mới)
+    const password = document.getElementById('password')?.value;
+    if (!password || password.length < 6) {
+      document.getElementById('errPassword')?.classList.add('show');
+      document.getElementById('password')?.classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('errPassword')?.classList.remove('show');
+      document.getElementById('password')?.classList.remove('error');
+    }
+    {% endif %}
+
+    if (!valid) {
+      e.preventDefault();
+      const firstError = document.querySelector('.error');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 2000);
+    }
+  });
+
+  // Clear error on input
+  document.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', function() {
+      this.classList.remove('error');
+      const parent = this.closest('.field');
+      if (parent) {
+        const errMsg = parent.querySelector('.error-msg');
+        if (errMsg) errMsg.classList.remove('show');
+      }
+    });
+  });
+
+  document.querySelectorAll('input[name="gender"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      document.getElementById('errGender')?.classList.remove('show');
+    });
+  });
+</script>
+{% endblock %}

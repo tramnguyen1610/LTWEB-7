@@ -1,0 +1,119 @@
+{% extends 'base/base_manager.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/salary/thiet_lap_luong.css' %}">
+
+    <style>
+        body { overflow: hidden !important; }
+
+        .section-card {
+            box-sizing: border-box !important; /* Lệnh khóa padding không cho phình to */
+            height: calc(100vh - 100px) !important; /* Trừ hao header an toàn */
+            display: flex !important;
+            flex-direction: column !important;
+            padding: 20px 24px !important;
+        }
+
+        .section-title {
+            flex-shrink: 0 !important; /* Ghim tiêu đề đứng yên */
+            margin-bottom: 20px !important;
+        }
+
+        .salary-table-container {
+            flex: 1 !important; /* Nở ra chiếm phần giữa */
+            min-height: 0 !important; /* Ép sinh thanh cuộn */
+            overflow-y: auto !important; /* Bật thanh cuộn dọc */
+            overflow-x: auto !important; /* Bật thanh cuộn ngang */
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .salary-table thead th {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+            background: #2C3142 !important; /* Màu nền header bảng */
+        }
+
+        /* Tùy chỉnh thanh cuộn */
+        .salary-table-container::-webkit-scrollbar { width: 8px; height: 8px; }
+        .salary-table-container::-webkit-scrollbar-track { background: transparent; }
+        .salary-table-container::-webkit-scrollbar-thumb {
+            background: rgba(139, 26, 43, 0.45);
+            border-radius: 999px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="section-card">
+    <h2 class="section-title"><i class="fa-solid fa-list-check"></i> Danh sách mức lương theo vị trí</h2>
+
+    <div class="salary-table-container">
+        <table class="salary-table">
+            <thead>
+                <tr>
+                    <th>Vị trí</th>
+                    <th>Tên mức lương</th>
+                    <th>Trạng thái</th>
+                    <th>Mức lương hiện tại</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lvl in salary_levels %}
+                <tr>
+                    <td class="fw-600">{{ lvl.position.position_name }}</td>
+                    <td>{{ lvl.level_name }}</td>
+                    <td>
+                        {% if lvl.status == 'official' %}
+                            <span class="badge-official">Chính thức</span>
+                        {% else %}
+                            <span class="badge-probation">Thử việc</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-navy">
+                        {{ lvl.base_salary|floatformat:0 }}đ
+                        {% if lvl.pay_type == 'HOURLY' %}/giờ{% else %}/tháng{% endif %}
+                    </td>
+                    <td class="text-center">
+                        <button onclick="openModal('{{ lvl.salary_level_id }}', '{{ lvl.position.position_name }}', '{{ lvl.level_name }}', '{{ lvl.base_salary|floatformat:0 }}', '{% if lvl.pay_type == 'HOURLY' %}/giờ{% else %}/tháng{% endif %}')" class="btn-setup">
+                            Thiết lập
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="salaryModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 class="modal-title">Cập nhật mức lương</h3>
+
+        <form method="POST" action="{% url 'salary:cap_nhat_muc_luong' %}">
+            {% csrf_token %}
+            <input type="hidden" name="level_id" id="modal_level_id">
+
+            <div style="margin-bottom: 15px;">
+                <label class="modal-label">Vị trí & Cấp bậc</label>
+                <div id="modal_level_desc" class="modal-desc"></div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <label id="modal_salary_label" class="modal-label">Mức lương mới (VND)</label>
+                <input type="number" name="new_salary" id="modal_new_salary" step="1000" required class="modal-input">
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" onclick="closeModal()" class="btn-cancel">Hủy</button>
+                <button type="submit" class="btn-save">Lưu thay đổi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'js/thiet_lap_luong.js' %}"></script>
+{% endblock %}

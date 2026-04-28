@@ -1,0 +1,107 @@
+/* Tận dụng lại các biến màu của hệ thống Bông */
+.breadcrumb-simple {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #5a6377;
+}
+.breadcrumb-simple a {
+    color: var(--primary, #8B1A2B);
+    text-decoration: none;
+}
+.breadcrumb-simple a:hover {
+    text-decoration: underline;
+}
+.tl-card {
+    background: #F5EDD8;
+    border-radius: 14px;
+    padding: 24px 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+.tl-card-title { font-size: 20px; font-weight: 700; color: #1E2235; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+.tl-card-subtitle { font-size: 14px; color: #6B7280; margin-bottom: 24px; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+.stat-box {
+    background: white; padding: 24px; border-radius: 12px;
+    border-left: 5px solid #8B1A2B; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.stat-box:nth-child(2) { border-left-color: #C8A84B; }
+.stat-box:nth-child(3) { border-left-color: #27ae60; }
+
+.stat-label { font-size: 13px; color: #6B7280; font-weight: 600; text-transform: uppercase; margin-bottom: 6px; }
+.stat-value { font-size: 26px; font-weight: 800; color: #1E2235; }
+
+.preview-card { display: none; }
+.preview-card.show { display: block; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Thêm vào cuối file */
+.result-wrapper {
+    background: #F5EDD8; /* cùng màu với tl-card */
+    border-radius: 14px; /* cùng với tl-card */
+    padding: 24px 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.result-title {
+    font-size: 20px; /* cùng cỡ với tl-card-title */
+    font-weight: 700;
+    color: #1E2235;
+    margin-bottom: 8px;
+}
+
+.result-sub {
+    font-size: 14px;
+    color: #6B7280;
+    margin-bottom: 24px;
+    border-left: none; /* bỏ viền trái cho giống */
+    padding-left: 0;
+}
+
+.badge-period {
+    background: #A52035;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 12px;
+}
+
+.table-responsive {
+    background: white;
+    border-radius: 12px;
+    overflow-x: auto;
+}
+
+.salary-table th {
+    background-color: #f8fafc;
+    padding: 12px 16px;
+    font-weight: 600;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.salary-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eef2f6;
+}
+
+.total-row td {
+    background-color: #f9fafb;
+    font-weight: 700;
+}
+
+.btn-primary, .btn-secondary {
+    border-radius: 8px; /* cùng với nút trong trang chọn tháng */
+    padding: 8px 20px;
+}
+
+.submenu .sub-item.active,
+.sidebar .sub-item.active {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-left: 3px solid #8B1A2B !important;
+    color: #fff !important;
+    font-weight: 600;
+}

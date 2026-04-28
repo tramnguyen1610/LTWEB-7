@@ -1,0 +1,80 @@
+{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Thiết lập Thưởng/Phạt - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/reward_penalty/thiet_lap_thuong_phat.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h2>Thiết lập Thưởng/Phạt</h2>
+    <span>Trang chủ / Thưởng/Phạt / Thiết lập</span>
+</div>
+
+<div class="form-container-box">
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Nhân viên áp dụng *</label>
+            <select name="employee" class="input-control" required>
+                <option value="">-- Chọn nhân viên từ danh sách --</option>
+                {% for emp in employees %}
+                    <option value="{{ emp.pk }}">{{ emp.full_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Loại hình</label>
+            <select name="type" class="input-control">
+                <option value="reward">Thưởng (Reward)</option>
+                <option value="penalty">Phạt (Penalty)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Ngày áp dụng</label>
+            <input type="date" name="date_applied" class="input-control" required value="{{ today|date:'Y-m-d' }}">
+        </div>
+
+        <div class="form-group">
+            <label>Lý do (Reason)</label>
+            <textarea name="reason" class="input-control" placeholder="Nhập lý do thưởng hoặc vi phạm chi tiết..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Số tiền (VND)</label>
+            <div class="price-row">
+                <div class="price-tag" onclick="selectAmount(this, 50000)">50.000đ</div>
+                <div class="price-tag" onclick="selectAmount(this, 100000)">100.000đ</div>
+                <div class="price-tag" onclick="selectAmount(this, 200000)">200.000đ</div>
+            </div>
+            <div class="custom-amount-wrap">
+                <input type="number" name="amount" id="amount_input" class="input-control" placeholder="Hoặc nhập số tiền khác..." required>
+                <span style="font-weight: bold; color: #1E2235;">VNĐ</span>
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <button type="button" class="btn-action btn-cancel" onclick="window.location.href='{% url 'reward_list' %}'">Hủy bỏ</button>
+            <button type="submit" class="btn-action btn-save">Lưu thiết lập</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function selectAmount(element, value) {
+        // Xóa class selected của tất cả các nút
+        document.querySelectorAll('.price-tag').forEach(tag => tag.classList.remove('selected'));
+        // Thêm class selected cho nút vừa bấm
+        element.classList.add('selected');
+        // Gán giá trị vào ô input number
+        document.getElementById('amount_input').value = value;
+    }
+</script>
+{% endblock %}

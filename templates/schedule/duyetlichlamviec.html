@@ -1,0 +1,135 @@
+{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Duyệt lịch làm việc{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/schedule/schedule_approve.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="approve-page">
+    <div class="filter-card">
+        <div class="filter-tab">🔍 Tìm kiếm &amp; Lọc</div>
+
+        <div class="filter-body">
+            <div class="filter-row">
+                <div class="filter-group filter-name">
+                    <label class="filter-label" for="fName">Họ và tên</label>
+                    <input class="filter-input" id="fName" type="text" placeholder="Nhập họ và tên">
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="fMonth">Chọn tháng/năm</label>
+                    <select class="filter-select" id="fMonth">
+                        <option value="">– Tháng –</option>
+                        <option value="1-2026">Tháng 1, 2026</option>
+                        <option value="2-2026">Tháng 2, 2026</option>
+                        <option value="3-2026">Tháng 3, 2026</option>
+                        <option value="4-2026">Tháng 4, 2026</option>
+                        <option value="5-2026">Tháng 5, 2026</option>
+                        <option value="6-2026">Tháng 6, 2026</option>
+                        <option value="7-2026">Tháng 7, 2026</option>
+                        <option value="8-2026">Tháng 8, 2026</option>
+                        <option value="9-2026">Tháng 9, 2026</option>
+                        <option value="10-2026">Tháng 10, 2026</option>
+                        <option value="11-2026">Tháng 11, 2026</option>
+                        <option value="12-2026">Tháng 12, 2026</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="fWeek">Chọn tuần</label>
+                    <select class="filter-select" id="fWeek">
+                        <option value="">– Tuần –</option>
+                        <option value="1">Tuần 1</option>
+                        <option value="2">Tuần 2</option>
+                        <option value="3">Tuần 3</option>
+                        <option value="4">Tuần 4</option>
+                        <option value="5">Tuần 5</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="fCa">Ca làm</label>
+                    <select class="filter-select" id="fCa">
+                        <option value="">– Ca làm –</option>
+                        <option value="sang">Ca Sáng</option>
+                        <option value="chieu">Ca Chiều</option>
+                        <option value="toi">Ca Tối</option>
+                    </select>
+                </div>
+
+                <div class="filter-btns">
+                    <button class="btn-search" type="button" onclick="doSearch()">Tìm kiếm</button>
+                    <button class="btn-reset" type="button" onclick="doReset()">Đặt lại</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-item">
+                <span class="si-label">Tổng số lịch:</span>
+                <span class="si-val" id="statTotal">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="si-label">Đã duyệt:</span>
+                <span class="si-val green" id="statApproved">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="si-label">Đang chờ:</span>
+                <span class="si-val orange" id="statPending">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="si-label">Từ chối:</span>
+                <span class="si-val red" id="statRejected">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-scroll">
+            <table class="main-table">
+                <thead>
+                    <tr>
+                        <th>Thông tin nhân viên</th>
+                        <th>Số ngày</th>
+                        <th>Tổng giờ</th>
+                        <th>Thời gian đăng ký</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <div id="noResult" class="no-result" style="display:none;">
+            😕 Không tìm thấy nhân viên phù hợp với từ khóa tìm kiếm.
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="confirmModal">
+    <div class="confirm-box">
+        <div class="confirm-icon" id="cIcon">✅</div>
+        <div class="confirm-title" id="cTitle">Xác nhận duyệt</div>
+        <div class="confirm-desc" id="cDesc">Bạn có chắc muốn duyệt lịch làm việc này?</div>
+        <div class="confirm-btns">
+            <button class="cbtn cbtn-cancel" type="button" onclick="closeConfirm()">Hủy bỏ</button>
+            <button class="cbtn" id="cConfirmBtn" type="button" onclick="executeAction()">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast">
+    <span id="toastIcon">✅</span>
+    <span id="toastMsg">Thành công!</span>
+</div>
+
+<script>
+    const API_APPROVE_LIST_URL = "{% url 'api_approve_schedule_list' %}";
+    const API_APPROVE_UPDATE_URL = "{% url 'api_approve_schedule_update' %}";
+</script>
+<script src="{% static 'js/schedule_approve.js' %}?v=1"></script>
+{% endblock %}

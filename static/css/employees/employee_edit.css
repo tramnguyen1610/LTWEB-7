@@ -1,0 +1,513 @@
+:root {
+  --primary: #8B1A2B;
+  --primary-dark: #6B1220;
+  --card-bg: #F5EDD8;
+  --content-bg: #8C97AA;
+  --text-dark: #1E2235;
+  --text-muted: #6B7280;
+  --icon-circle: #2C3142;
+  --icon-accent: #C8A84B;
+  --green-btn: #1A7A32;
+  --green-btn-dark: #145528;
+  --section-border: #D4C9A8;
+  --field-border: #BFBFBF;
+  --disabled-bg: #E8E8E8;
+  --disabled-text: #888;
+}
+
+/* =========================================
+   1. ĐỊNH DẠNG CÁC THÀNH PHẦN BÊN TRONG
+========================================= */
+.card-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 22px 13px;
+  border-bottom: 1px solid #EAE2CC;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.card-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-topbar-icon {
+  width: 36px;
+  height: 36px;
+  background: #2C3142;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: white;
+}
+
+.card-topbar-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.card-topbar-sub {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.btn-x {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid #CCC;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  transition: all .18s;
+}
+
+.btn-x:hover {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.ma-nv-label {
+  padding: 10px 22px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.sections-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 12px 22px 0;
+}
+
+.section-box {
+  border: 1.5px solid var(--section-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.section-box-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--card-bg);
+  border-bottom: 1.5px solid var(--section-border);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.section-box-body {
+  padding: 14px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.req {
+  color: #8B1A2B;
+}
+
+.field input, .field select {
+  padding: 8px 11px;
+  border-radius: 7px;
+  border: 1.5px solid var(--field-border);
+  background: #fff;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 13.5px;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color .18s, box-shadow .18s;
+  width: 100%;
+}
+
+.field input:focus, .field select:focus {
+  border-color: #8B1A2B;
+  box-shadow: 0 0 0 3px rgba(139,26,43,.1);
+}
+
+.field input.no-edit {
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
+  cursor: not-allowed;
+  border-color: #D4D4D4;
+}
+
+.date-wrap {
+  position: relative;
+}
+
+.date-wrap input {
+  padding-right: 32px;
+}
+
+.date-icon {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #888;
+  pointer-events: none;
+}
+
+.dob-gender-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.gender-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 4px;
+  flex-wrap: wrap;
+}
+
+.g-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  cursor: default;
+}
+
+.g-label input[type=radio] {
+  accent-color: #8B1A2B;
+  width: 14px;
+  height: 14px;
+}
+
+.field select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath fill='%236B7280' d='M5.5 7L0 0h11z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  padding-right: 28px;
+}
+
+.account-section {
+  margin: 14px 22px 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: var(--icon-circle);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.account-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.avatar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.avatar-wrap {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.avatar-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2.5px solid var(--icon-accent);
+  background: #E8D5B7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #8B1A2B;
+  overflow: hidden;
+  position: relative;
+  transition: filter .2s;
+}
+
+.avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: none;
+}
+
+.avatar-hover {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0,0,0,.52);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .2s;
+  font-size: 18px;
+  color: white;
+}
+
+.avatar-wrap:hover .avatar-hover {
+  opacity: 1;
+}
+
+.avatar-wrap:hover .avatar-circle {
+  filter: brightness(.75);
+}
+
+.avatar-hint {
+  font-size: 10px;
+  color: rgba(255,255,255,.5);
+}
+
+#avatarInput {
+  display: none;
+}
+
+.account-body {
+  padding: 14px 18px;
+  background: var(--icon-circle);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.account-body .field label {
+  color: #BFC5D2;
+}
+
+.account-body .field input {
+  background: rgba(255,255,255,.92);
+  border-color: rgba(255,255,255,.2);
+  color: var(--text-dark);
+}
+
+.account-body .field input.no-edit {
+  background: rgba(255,255,255,.45);
+  color: #666;
+  border-color: rgba(255,255,255,.1);
+}
+
+.pw-wrap {
+  position: relative;
+}
+
+.pw-wrap input {
+  padding-right: 36px;
+}
+
+.pw-eye {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #777;
+  padding: 0;
+}
+
+.btn-huy, .btn-luu {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 22px;
+  border-radius: 9px;
+  border: none;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+}
+
+.btn-huy {
+  background: #8B1A2B;
+  color: #fff;
+}
+
+.btn-huy:hover {
+  background: #6B1220;
+  transform: translateY(-1px);
+}
+
+.btn-luu {
+  background: var(--green-btn);
+  color: #fff;
+}
+
+.btn-luu:hover {
+  background: var(--green-btn-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(26,122,50,.35);
+}
+
+.toast {
+  display: none;
+  position: fixed;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1.5px solid var(--green-btn);
+  border-radius: 10px;
+  padding: 13px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green-btn);
+  z-index: 300;
+  box-shadow: 0 6px 24px rgba(0,0,0,.15);
+  white-space: nowrap;
+  animation: slideDown .25s ease;
+}
+
+@keyframes slideDown {
+  from { top: 8px; opacity: 0; }
+  to { top: 28px; opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .sections-row {
+    grid-template-columns: 1fr;
+  }
+  .dob-gender-row {
+    grid-template-columns: 1fr;
+  }
+  .account-body {
+    grid-template-columns: 1fr;
+  }
+  .toast {
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* =========================================
+   2. COPY CÔNG THỨC SCROLL CHUẨN TỪ TRANG ADD
+========================================= */
+
+html,
+body {
+  height: 100%;
+  overflow: hidden !important;
+}
+
+/* 1. KHUNG CONTAINER CHÍNH */
+.form-card {
+  background: #FFFDF6;
+  border-radius: 14px;
+  box-shadow: 0 3px 18px rgba(0,0,0,0.14);
+  /* Áp dụng đúng công thức height từ trang add */
+  height: calc(100vh - 90px) !important;
+  max-height: calc(100vh - 90px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+/* Các phần tử cố định trên cùng (không cuộn) */
+.card-topbar,
+.ma-nv-label {
+  flex-shrink: 0;
+}
+
+/* 2. THẺ FORM LÀ FLEX CONTAINER */
+.form-card form {
+  flex: 1;
+  min-height: 0; /* Rất quan trọng để không vỡ khung */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3. VÙNG CUỘN HIỂN THỊ CHÍNH */
+.edit-scroll-body {
+  flex: 1;
+  min-height: 0; /* Rất quan trọng để sinh thanh cuộn */
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  padding-bottom: 20px;
+}
+
+/* 4. FOOTER DÍNH ĐÁY */
+.form-footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 22px 20px;
+  background: #FFFDF6;
+  border-top: 1px solid #EAE2CC;
+}
+
+/* Tùy chỉnh thanh cuộn cho mượt */
+.edit-scroll-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.edit-scroll-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.edit-scroll-body::-webkit-scrollbar-thumb {
+  background: rgba(139, 26, 43, 0.45);
+  border-radius: 999px;
+}
+
+.edit-scroll-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 26, 43, 0.65);
+}

@@ -1,0 +1,254 @@
+/* static/css/salary/ket_qua_tinh_luong.css */
+
+:root {
+    --primary: #8B1A2B;
+    --primary-dark: #6B1220;
+    --primary-light: #A52035;
+    --card-bg: #F5EDD8;
+    --text-dark: #1E2235;
+    --border-color: #D4C9A8;
+}
+
+/* Khóa cuộn ngoài */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
+}
+
+/* Khung ngoài trang lương */
+.content {
+    height: calc(100vh - 90px) !important;
+    max-height: calc(100vh - 90px) !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+/* Card vàng */
+.result-wrapper {
+    height: 100% !important;
+    max-height: 100% !important;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 24px 28px 0 28px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    box-sizing: border-box;
+
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+/* Tiêu đề cố định */
+.result-title {
+    flex-shrink: 0;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.result-sub {
+    flex-shrink: 0;
+    color: #4a5568;
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+    border-left: 3px solid var(--primary);
+    padding-left: 12px;
+}
+
+.badge-period {
+    background: var(--primary-light);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 12px;
+    vertical-align: middle;
+}
+
+/* Vùng bảng cuộn */
+.table-responsive {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 0 !important;
+}
+
+/* Bảng */
+.salary-table {
+    width: 100%;
+    min-width: 800px;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    font-size: 0.9rem;
+}
+
+.salary-table thead th {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+
+    background: #f8fafc !important;
+    padding: 14px 12px;
+    font-weight: 700;
+    color: #1e293b;
+    border-bottom: 2px solid #e2e8f0;
+    text-align: left;
+}
+
+.salary-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eef2f6;
+    background: #fff;
+}
+
+.salary-table tbody tr:hover td {
+    background: #fef9e8;
+}
+
+/* Dòng tổng cộng đứng dưới bảng */
+.salary-table tfoot td {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 50 !important;
+
+    background: #f1f5f9 !important;
+    font-weight: 800;
+    border-top: 2px solid #cbd5e1;
+    padding: 14px 12px;
+}
+
+/* Nút cố định dưới giống trang add */
+.btn-group {
+    flex-shrink: 0 !important;
+
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 16px !important;
+
+    background: #FFFDF6 !important;
+    border-top: 1px solid var(--border-color) !important;
+
+    padding: 16px 24px !important;
+    margin: 0 -28px !important;
+
+    z-index: 100 !important;
+}
+
+.btn-primary,
+.btn-secondary {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 28px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.btn-secondary:hover {
+    background: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+/* Scrollbar */
+.table-responsive::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #D4C9A8;
+    border-radius: 999px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #C4B998;
+}
+
+/* Toast */
+.custom-toast {
+    position: fixed;
+    top: 100px;
+    right: -400px;
+    background: white;
+    border-left: 6px solid #27ae60;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    padding: 16px 24px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 999999;
+    transition: right 0.4s ease-in-out;
+    width: 320px;
+}
+
+.custom-toast.show {
+    right: 30px;
+}
+
+.custom-toast.error {
+    border-left-color: #e74c3c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .content {
+        height: calc(100vh - 80px) !important;
+        max-height: calc(100vh - 80px) !important;
+    }
+
+    .result-wrapper {
+        padding: 18px 18px 0 18px;
+        border-radius: 16px;
+    }
+
+    .result-title {
+        font-size: 1.35rem;
+    }
+
+    .badge-period {
+        margin-left: 0;
+        margin-top: 8px;
+    }
+
+    .btn-group {
+        margin: 0 -18px !important;
+        flex-direction: column-reverse;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+}

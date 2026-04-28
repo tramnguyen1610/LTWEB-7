@@ -1,0 +1,214 @@
+{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Cập nhật nhân viên - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/employees/employee_edit.css' %}">
+<style>
+  body { overflow: hidden !important; }
+  .edit-scroll-body::-webkit-scrollbar { width: 8px; }
+  .edit-scroll-body::-webkit-scrollbar-track { background: transparent; }
+  .edit-scroll-body::-webkit-scrollbar-thumb { background: rgba(139, 26, 43, 0.45); border-radius: 999px; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="form-card" style="height: calc(100vh - 90px) !important; display: flex !important; flex-direction: column !important; overflow: hidden !important;">
+
+  <div class="card-topbar" style="flex-shrink: 0 !important;">
+    <div class="card-topbar-left">
+      <div class="card-topbar-icon">📋</div>
+      <div>
+        <div class="card-topbar-title">Thông tin nhân viên</div>
+        <div class="card-topbar-sub">Chỉ chỉnh sửa thông tin cho phép chỉnh sửa</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ma-nv-label" style="flex-shrink: 0 !important;">
+    Mã nhân viên: <strong>NV{{ employee.employee_id|stringformat:"03d" }}</strong>
+  </div>
+
+  <form method="POST" id="employeeForm" style="flex: 1 !important; display: flex !important; flex-direction: column !important; min-height: 0 !important;">
+    {% csrf_token %}
+
+     <div class="edit-scroll-body" style="flex: 1 !important; min-height: 0 !important; overflow-y: auto !important; overflow-x: hidden !important; padding-bottom: 20px !important;">
+        <div class="sections-row">
+          <div class="section-box">
+            <div class="section-box-header">ℹ️ &nbsp;Thông tin cá nhân</div>
+            <div class="section-box-body">
+              <div class="field">
+                <label>Họ và tên <span class="req">*</span></label>
+                <input type="text" name="full_name" class="no-edit" readonly value="{{ employee.full_name }}">
+              </div>
+
+              <div class="field">
+                <label>Số CCCD <span class="req">*</span></label>
+                <input type="text" name="citizen_id" class="no-edit" readonly value="{{ employee.citizen_id }}">
+              </div>
+
+              <div class="dob-gender-row">
+                <div class="field">
+                  <label>Ngày sinh</label>
+                  <div class="date-wrap">
+                    <input type="text" class="no-edit" readonly value="{{ employee.date_of_birth|date:'d/m/Y' }}">
+                    <span class="date-icon">📅</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Giới tính <span class="req">*</span></label>
+                  <div class="gender-group">
+                    <label class="g-label">
+                      <input type="radio" name="gender" value="M" {% if employee.gender == 'M' %}checked{% endif %} disabled> Nam
+                    </label>
+                    <label class="g-label">
+                      <input type="radio" name="gender" value="F" {% if employee.gender == 'F' %}checked{% endif %} disabled> Nữ
+                    </label>
+                    <label class="g-label">
+                      <input type="radio" name="gender" value="O" {% if employee.gender == 'O' %}checked{% endif %} disabled> Khác
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Số điện thoại <span class="req">*</span></label>
+                <input type="tel" name="phone_number" value="{{ employee.phone_number }}" placeholder="Nhập số điện thoại" maxlength="10">
+              </div>
+            </div>
+          </div>
+
+          <div class="section-box">
+            <div class="section-box-header">💼 &nbsp;Thông tin công việc</div>
+            <div class="section-box-body">
+              <div class="field">
+                <label>Số tài khoản</label>
+                <input type="text" name="bank_account" value="{{ employee.bank_account|default:'' }}" placeholder="Nhập số tài khoản">
+              </div>
+
+              <div class="field">
+                <label>Tên ngân hàng</label>
+                <input type="text" name="bank_name" value="{{ employee.bank_name|default:'' }}" placeholder="Nhập tên ngân hàng">
+              </div>
+
+              <div class="field">
+                <label>Vị trí <span class="req">*</span></label>
+                <select name="position">
+                  <option value="">-- Chọn vị trí --</option>
+                  {% for pos in positions %}
+                  <option value="{{ pos.position_id }}" {% if employee.position.position_id == pos.position_id %}selected{% endif %}>
+                    {{ pos.position_name }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Ngày vào làm</label>
+                <div class="date-wrap">
+                  <input type="text" class="no-edit" readonly value="{{ employee.hire_date|date:'d/m/Y' }}">
+                  <span class="date-icon">📅</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Tình trạng</label>
+                <select name="status">
+                  <option value="probation" {% if employee.status == 'probation' %}selected{% endif %}>Thử việc</option>
+                  <option value="official" {% if employee.status == 'official' %}selected{% endif %}>Chính thức</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="account-section">
+          <div class="account-header">
+            <div class="account-header-left">👤 &nbsp;Thông tin tài khoản</div>
+            <div class="avatar-col">
+              <div class="avatar-wrap" onclick="document.getElementById('avatarInput').click()" title="Nhấn để thay đổi ảnh">
+                <div class="avatar-circle" id="avatarCircle">
+                  <span id="avatarInitials">{{ employee.full_name|slice:":2"|upper }}</span>
+                  <img id="avatarImg" src="" alt="">
+                </div>
+                <div class="avatar-hover">📷</div>
+              </div>
+              <div class="avatar-hint">Đổi ảnh</div>
+              <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar(event)">
+            </div>
+          </div>
+
+          <div class="account-body">
+            <div class="field">
+              <label>Tên tài khoản <span class="req">*</span></label>
+              <input type="text" name="username" class="no-edit" readonly value="{{ employee.user.username }}">
+            </div>
+            <div class="field">
+              <label>Mật khẩu mới</label>
+              <div class="pw-wrap">
+                <input type="password" name="password" id="matKhau" placeholder="Để trống nếu không đổi">
+                <button class="pw-eye" type="button" onclick="togglePw()">👁</button>
+              </div>
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input type="email" name="email" value="{{ employee.user.email|default:'' }}" placeholder="Nhập email">
+            </div>
+          </div>
+        </div>
+     </div>
+
+     <div class="form-footer" style="flex-shrink: 0 !important; display: flex !important; justify-content: flex-end !important; gap: 12px !important; padding: 16px 22px 20px !important; background: #FFFDF6 !important; border-top: 1px solid #EAE2CC !important; margin-top: auto !important;">
+       <a href="{% url 'employees:employee_list' %}" class="btn-huy">❌ &nbsp;Hủy</a>
+       <button type="submit" class="btn-luu">💾 &nbsp;Lưu</button>
+     </div>
+  </form>
+</div>
+
+<div class="toast" id="toast">✅ Cập nhật thông tin nhân viên thành công</div>
+
+<script>
+  function goBack() {
+    window.location.href = "{% url 'employees:employee_list' %}";
+  }
+
+  function togglePw() {
+    const inp = document.getElementById('matKhau');
+    const btn = document.querySelector('.pw-eye');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      btn.textContent = '🙈';
+    } else {
+      inp.type = 'password';
+      btn.textContent = '👁';
+    }
+  }
+
+  function previewAvatar(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = document.getElementById('avatarImg');
+      img.src = ev.target.result;
+      img.style.display = 'block';
+      document.getElementById('avatarInitials').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Hiện toast khi submit thành công
+  const form = document.getElementById('employeeForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2000);
+    });
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,241 @@
+{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Báo cáo nhân sự - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/report/report.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="report-page">
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+        <label>Kỳ báo cáo:</label>
+        <select class="filter-select" id="filterMonth">
+            <option value="1" {% if month == 1 %}selected{% endif %}>Tháng 1</option>
+            <option value="2" {% if month == 2 %}selected{% endif %}>Tháng 2</option>
+            <option value="3" {% if month == 3 %}selected{% endif %}>Tháng 3</option>
+            <option value="4" {% if month == 4 %}selected{% endif %}>Tháng 4</option>
+            <option value="5" {% if month == 5 %}selected{% endif %}>Tháng 5</option>
+            <option value="6" {% if month == 6 %}selected{% endif %}>Tháng 6</option>
+            <option value="7" {% if month == 7 %}selected{% endif %}>Tháng 7</option>
+            <option value="8" {% if month == 8 %}selected{% endif %}>Tháng 8</option>
+            <option value="9" {% if month == 9 %}selected{% endif %}>Tháng 9</option>
+            <option value="10" {% if month == 10 %}selected{% endif %}>Tháng 10</option>
+            <option value="11" {% if month == 11 %}selected{% endif %}>Tháng 11</option>
+            <option value="12" {% if month == 12 %}selected{% endif %}>Tháng 12</option>
+        </select>
+
+        <select class="filter-select" id="filterYear">
+            <option value="2024" {% if year == 2024 %}selected{% endif %}>Năm 2024</option>
+            <option value="2025" {% if year == 2025 %}selected{% endif %}>Năm 2025</option>
+            <option value="2026" {% if year == 2026 %}selected{% endif %}>Năm 2026</option>
+        </select>
+
+        <div class="filter-divider"></div>
+
+        <label>Bộ phận:</label>
+        <select class="filter-select" id="filterPosition">
+            <option value="all" {% if selected_position == 'all' %}selected{% endif %}>Tất cả</option>
+            {% for pos in positions %}
+            <option value="{{ pos.position_id }}" {% if selected_position|stringformat:"s" == pos.position_id|stringformat:"s" %}selected{% endif %}>
+                {{ pos.position_name }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <div class="filter-divider"></div>
+        <button class="filter-btn btn-apply" onclick="applyFilter()">🔍 Xem báo cáo</button>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stat-cards">
+        <div class="stat-card">
+            <div class="stat-icon-wrap ic-blue">👥</div>
+            <div class="stat-info">
+                <div class="stat-value">{{ total_employees }}</div>
+                <div class="stat-label">Tổng nhân viên</div>
+                {% if total_employees_change != 0 %}
+                <div class="stat-change {% if total_employees_change > 0 %}up{% else %}down{% endif %}">
+                    {% if total_employees_change > 0 %}▲{% else %}▼{% endif %} {{ total_employees_change|floatformat:"0" }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-wrap ic-green">✅</div>
+            <div class="stat-info">
+                <div class="stat-value">{{ attendance_rate }}%</div>
+                <div class="stat-label">Tỉ lệ chuyên cần</div>
+                {% if attendance_rate_change != 0 %}
+                <div class="stat-change {% if attendance_rate_change > 0 %}up{% else %}down{% endif %}">
+                    {% if attendance_rate_change > 0 %}▲{% else %}▼{% endif %} {{ attendance_rate_change|floatformat:1 }}%
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-wrap ic-red">⏰</div>
+            <div class="stat-info">
+                <div class="stat-value">{{ total_late }}</div>
+                <div class="stat-label">Lượt đi trễ</div>
+                {% if total_late_change != 0 %}
+                <div class="stat-change {% if total_late_change < 0 %}up{% else %}down{% endif %}">
+                    {% if total_late_change < 0 %}▼{% else %}▲{% endif %} {{ total_late_change|floatformat:"0" }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-wrap ic-gold">💰</div>
+            <div class="stat-info">
+                <div class="stat-value">{{ total_salary|floatformat:0 }}đ</div>
+                <div class="stat-label">Tổng lương tháng</div>
+                {% if total_salary_change != 0 %}
+                <div class="stat-change {% if total_salary_change > 0 %}up{% else %}down{% endif %}">
+                    {% if total_salary_change > 0 %}▲{% else %}▼{% endif %} {{ total_salary_change|floatformat:0 }}đ
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- BẢNG CHI TIẾT -->
+    <div class="full-card">
+        <div class="section-header">
+            <div>
+                <div class="section-title">📋 Chi tiết nhân viên Tháng {{ month }}/{{ year }}</div>
+                <div class="mini-stats">
+                    <div class="mini-stat"><div class="mini-dot" style="background:#27ae60;"></div>Đủ công: {{ full_count }}</div>
+                    <div class="mini-stat"><div class="mini-dot" style="background:#e67e22;"></div>Thiếu công: {{ late_count }}</div>
+                    <div class="mini-stat"><div class="mini-dot" style="background:#e74c3c;"></div>Nghỉ không phép: {{ no_permit_count }}</div>
+                </div>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterTable('all')">Tất cả</button>
+                <button class="tab-btn" onclick="filterTable('thieu')">Thiếu công</button>
+                <button class="tab-btn" onclick="filterTable('thuong')">Được thưởng</button>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table id="mainTable">
+                <thead>
+                    <tr>
+                        <th>Mã NV</th>
+                        <th>Họ và tên</th>
+                        <th>Vị trí</th>
+                        <th>Ngày công</th>
+                        <th>Đi trễ</th>
+                        <th>Nghỉ</th>
+                        <th>Thưởng</th>
+                        <th>Phạt</th>
+                        <th>Lương thực nhận</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    {% for emp in employee_reports %}
+                    <tr class="report-row" data-status="{{ emp.status }}" data-bonus="{{ emp.bonus }}">
+                        <td>{{ emp.employee_id }}</td>
+                        <td><b>{{ emp.full_name }}</b></td>
+                        <td>{{ emp.position }}</td>
+                        <td>{{ emp.work_days }}</td>
+                        <td>{{ emp.late_count }}</td>
+                        <td>{{ emp.off_days }}</td>
+                        <td class="{% if emp.bonus > 0 %}text-green{% else %}text-muted{% endif %}">
+                            {% if emp.bonus > 0 %}+{{ emp.bonus|floatformat:0 }}đ{% else %}—{% endif %}
+                        </td>
+                        <td class="{% if emp.penalty > 0 %}text-red{% else %}text-muted{% endif %}">
+                            {% if emp.penalty > 0 %}-{{ emp.penalty|floatformat:0 }}đ{% else %}—{% endif %}
+                        </td>
+                        <td><b>{{ emp.net_salary|floatformat:0 }}đ</b></td>
+
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="9" style="text-align:center; padding:40px;">📭 Không có dữ liệu nhân viên</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- THƯỞNG / PHẠT THÁNG + TOP NHÂN VIÊN -->
+    <div class="two-col">
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-title">🎁 Tổng thưởng tháng</div>
+                <span class="badge" style="background:rgba(39,174,96,0.12);color:#1e8449;">+{{ total_bonus|floatformat:0 }}đ</span>
+            </div>
+            <div class="chart-wrap">
+                {% for bonus in bonus_stats %}
+                <div class="bar-row">
+                    <div class="bar-label">{{ bonus.reason|truncatechars:20 }}</div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width:{% widthratio bonus.total total_bonus 100 %}%;background:#27ae60;"></div>
+                    </div>
+                    <div class="bar-val">{{ bonus.total|floatformat:0 }}đ</div>
+                </div>
+                {% empty %}
+                <p style="color:#6B7280; text-align:center;">Chưa có dữ liệu thưởng</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-title">⚠️ Tổng phạt tháng</div>
+                <span class="badge" style="background:rgba(231,76,60,0.12);color:#c0392b;">-{{ total_penalty|floatformat:0 }}đ</span>
+            </div>
+            <div class="chart-wrap">
+                {% for penalty in penalty_stats %}
+                <div class="bar-row">
+                    <div class="bar-label">{{ penalty.reason|truncatechars:20 }}</div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width:{% widthratio penalty.total total_penalty 100 %}%;background:#e74c3c;"></div>
+                    </div>
+                    <div class="bar-val">{{ penalty.total|floatformat:0 }}đ</div>
+                </div>
+                {% empty %}
+                <p style="color:#6B7280; text-align:center;">Chưa có dữ liệu phạt</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function applyFilter() {
+    const month = document.getElementById('filterMonth').value;
+    const year = document.getElementById('filterYear').value;
+    const position = document.getElementById('filterPosition').value;
+    window.location.href = `/bao-cao/?month=${month}&year=${year}&position=${position}`;
+}
+
+function filterTable(type) {
+    const rows = document.querySelectorAll('#tableBody .report-row');
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    rows.forEach(row => {
+        const status = row.getAttribute('data-status');
+        const bonus = parseFloat(row.getAttribute('data-bonus') || 0);
+
+        if (type === 'all') {
+            row.style.display = '';
+        } else if (type === 'thieu') {
+            row.style.display = (status === 'Thiếu công' || status === 'Nghỉ không phép') ? '' : 'none';
+        } else if (type === 'thuong') {
+            row.style.display = bonus > 0 ? '' : 'none';
+        }
+    });
+}
+
+window.addEventListener('load', () => {
+    document.querySelectorAll('.bar-fill').forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => { bar.style.width = width; }, 100);
+    });
+});
+</script>
+{% endblock %}

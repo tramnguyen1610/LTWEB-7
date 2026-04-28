@@ -1,0 +1,74 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard Nhân viên{% endblock %}
+
+{% block body %}
+<div class="layout-shell">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <img src="{% static 'images/logo.jpg' %}" alt="Logo">
+            </div>
+            <div class="logo-text">
+                <h2>Trà Sữa Bông</h2>
+                <span>Nhân viên</span>
+            </div>
+        </div>
+
+        <nav>
+            <div class="sidebar-section">
+                <div class="sidebar-section-label">Tổng quan</div>
+                <a href="#" class="nav-item active">
+                    <span class="material-symbols-outlined nav-icon">dashboard</span>
+                    <span>Trang chủ</span>
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-label">Xem</div>
+                <a href="#" class="nav-item"><span class="material-symbols-outlined nav-icon">how_to_reg</span><span>Thông tin chấm công</span></a>
+                <a href="#" class="nav-item"><span class="material-symbols-outlined nav-icon">payments</span><span>Thông tin lương</span></a>
+                <a href="#" class="nav-item"><span class="material-symbols-outlined nav-icon">badge</span><span>Thông tin nhân viên</span></a>
+                <a href="#" class="nav-item"><span class="material-symbols-outlined nav-icon">calendar_month</span><span>Thông tin lịch làm</span></a>
+                <a href="#" class="nav-item"><span class="material-symbols-outlined nav-icon">military_tech</span><span>Thưởng/Phạt</span></a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="header">
+            <h1 class="header-title">Xin chào, {{ request.user.username }}</h1>
+
+            <div class="header-actions">
+                <button class="icon-btn" type="button"><span class="material-symbols-outlined">notifications</span></button>
+                <button class="icon-btn" type="button"><span class="material-symbols-outlined">settings</span></button>
+                <span class="header-divider"></span>
+
+                <div class="header-user" id="userMenuBtn">
+                    <div class="header-user-info">
+                        <div class="name">{{ request.user.username }}</div>
+                        <div class="role">Nhân viên</div>
+                    </div>
+
+                    <div class="avatar">
+                        {% if employee_avatar %}
+                            <img src="{{ employee_avatar }}" alt="Avatar">
+                        {% else %}
+                            <img src="{% static 'images/ava.png' %}" alt="Avatar">
+                        {% endif %}
+                    </div>
+
+                    <div id="logoutDropdown" class="logout-dropdown">
+                        <a href="{% url 'logout' %}"><span class="material-symbols-outlined">logout</span> Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="content">
+            {% block content %}{% endblock %}
+        </section>
+    </main>
+</div>
+{% endblock %}

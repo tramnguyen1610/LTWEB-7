@@ -1,0 +1,161 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Quản lý Trà Sữa Bông{% endblock %}
+
+{% block body %}
+<div class="manager-container">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <img src="{% static 'images/logo.jpg' %}" alt="Logo">
+            </div>
+            <div class="logo-text">
+                <h2>Trà Sữa Bông</h2>
+<!--                <span>Quản lý cửa hàng</span>-->
+            </div>
+        </div>
+
+        {% with url_name=request.resolver_match.url_name %}
+        <nav>
+            <div class="sidebar-section">
+                <div class="sidebar-section-label">Tổng quan</div>
+                <a class="nav-item {% if url_name == 'dashboard_manager' %}active{% endif %}" href="{% url 'dashboard_manager' %}">
+                    <span class="material-symbols-outlined nav-icon">dashboard</span>
+                    <span>Trang chủ</span>
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-label">Quản lý</div>
+
+               <a class="nav-item nav-toggle {% if url_name == 'cham_cong' or url_name == 'xu_ly_cham_cong' or url_name == 'chinh_sua_cham_cong' or url_name == 'xem_cham_cong' %}active{% endif %}"
+                   href="{% url 'attendance:xem_cham_cong' %}"
+                   data-target="submenu-chamcong">
+                    <span class="material-symbols-outlined nav-icon">how_to_reg</span>
+                    <span>Chấm công</span>
+                </a>
+
+                <div class="submenu {% if url_name == 'cham_cong' or url_name == 'xu_ly_cham_cong' or url_name == 'chinh_sua_cham_cong' or url_name == 'xem_cham_cong' %}show{% endif %}"
+                id="submenu-chamcong">
+                    <a class="sub-item {% if url_name == 'xu_ly_cham_cong' %}active{% endif %}" href="{% url 'attendance:xu_ly_cham_cong' %}">Xử lý chấm công</a>
+                    <a class="sub-item {% if url_name == 'chinh_sua_cham_cong' %}active{% endif %}" href="{% url 'attendance:chinh_sua_cham_cong' %}">Chỉnh sửa chấm công</a>
+                    <a class="sub-item {% if url_name == 'xem_cham_cong' %}active{% endif %}" href="{% url 'attendance:xem_cham_cong' %}">Xem thông tin chấm công</a>
+                </div>
+
+                <a class="nav-item nav-toggle {% if url_name == 'thiet_lap_muc_luong' or url_name == 'xem_thong_tin_luong' or url_name == 'tinh_luong' or url_name == 'ket_qua_tinh_luong' %}active{% endif %}"
+                   href="{% url 'salary:xem_thong_tin_luong' %}"
+                   data-target="submenu-luong">
+                    <span class="material-symbols-outlined nav-icon">payments</span>
+                    <span>Lương</span>
+                </a>
+                <div class="submenu {% if url_name == 'thiet_lap_muc_luong' or url_name == 'xem_thong_tin_luong' or url_name == 'tinh_luong' or url_name == 'ket_qua_tinh_luong' %}show{% endif %}" id="submenu-luong">
+                    <a class="sub-item {% if url_name == 'thiet_lap_muc_luong' %}active{% endif %}" href="{% url 'salary:thiet_lap_muc_luong' %}">Thiết lập mức lương</a>
+                    <a class="sub-item {% if url_name == 'xem_thong_tin_luong' %}active{% endif %}" href="{% url 'salary:xem_thong_tin_luong' %}">Xem thông tin lương</a>
+                    <a class="sub-item {% if url_name == 'tinh_luong' or url_name == 'ket_qua_tinh_luong' %}active{% endif %}" href="{% url 'salary:tinh_luong' %}">Tính lương</a>
+                </div>
+
+                <a class="nav-item {% if url_name == 'employee_list' or url_name == 'employee_create' or url_name == 'employee_update' %}active{% endif %}"
+                   href="{% url 'employees:employee_list' %}">
+                    <span class="material-symbols-outlined nav-icon">badge</span>
+                    <span>Nhân viên</span>
+                </a>
+
+                <a class="nav-item nav-toggle {% if url_name == 'taolichlamviec' or url_name == 'xemlichlamviec' or url_name == 'xoalichlamviec' or url_name == 'duyetlichlam' %}active{% endif %}"
+                   href="{% url 'xemlichlamviec' %}"
+                   data-target="submenu-lichlam">
+                    <span class="material-symbols-outlined nav-icon">calendar_month</span>
+                    <span>Lịch làm</span>
+                </a>
+                <div class="submenu {% if url_name == 'taolichlamviec' or url_name == 'xemlichlamviec' or url_name == 'xoalichlamviec' or url_name == 'duyetlichlam' %}show{% endif %}" id="submenu-lichlam">
+                    <a class="sub-item {% if url_name == 'taolichlamviec' %}active{% endif %}" href="{% url 'taolichlamviec' %}">Tạo/Chỉnh sửa lịch làm</a>
+                    <a class="sub-item {% if url_name == 'xemlichlamviec' %}active{% endif %}" href="{% url 'xemlichlamviec' %}">Xem lịch làm việc</a>
+                    <a class="sub-item {% if url_name == 'xoalichlamviec' %}active{% endif %}" href="{% url 'xoalichlamviec' %}">Xóa lịch làm việc</a>
+                    <a class="sub-item {% if url_name == 'duyetlichlam' %}active{% endif %}" href="{% url 'duyetlichlam' %}">Duyệt lịch làm việc</a>
+                </div>
+
+                <a class="nav-item nav-toggle {% if url_name == 'reward_create' or url_name == 'reward_list' %}active{% endif %}"
+                   href="{% url 'reward_list' %}"
+                   data-target="submenu-thuongphat">
+                    <span class="material-symbols-outlined nav-icon">military_tech</span>
+                    <span>Thưởng/Phạt</span>
+                </a>
+                <div class="submenu {% if url_name == 'reward_create' or url_name == 'reward_list' %}show{% endif %}" id="submenu-thuongphat">
+                    <a class="sub-item {% if url_name == 'reward_create' %}active{% endif %}" href="{% url 'reward_create' %}">Thiết lập</a>
+                    <a class="sub-item {% if url_name == 'reward_list' %}active{% endif %}" href="{% url 'reward_list' %}">Xem thông tin</a>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-label">Báo cáo</div>
+                <a class="nav-item {% if url_name == 'report' %}active{% endif %}" href="{% url 'report' %}">
+                    <span class="material-symbols-outlined nav-icon">bar_chart</span>
+                    <span>Báo cáo nhân sự</span>
+                </a>
+            </div>
+        </nav>
+        {% endwith %}
+    </aside>
+
+    <main class="main">
+        <header class="header">
+            <div class="header-left">
+                <h1 class="header-title">Xin chào, {{ request.user.username|capfirst }}</h1>
+            </div>
+
+            <div class="header-actions">
+                <button class="icon-btn" type="button"><span class="material-symbols-outlined">notifications</span></button>
+                <button class="icon-btn" type="button"><span class="material-symbols-outlined">settings</span></button>
+                <button class="icon-btn" type="button"><span class="material-symbols-outlined">help_outline</span></button>
+                <span class="header-divider"></span>
+
+                <div class="header-user" id="userMenuBtn">
+                    <div class="header-user-info">
+                        <div class="name">{{ request.user.username|capfirst }}</div>
+                        <div class="role">Quản lý cửa hàng</div>
+                    </div>
+                    <div class="avatar">{{ request.user.username|slice:":2"|upper }}</div>
+                    <div id="logoutDropdown" class="logout-dropdown">
+                        <a href="{% url 'logout' %}"><span class="material-symbols-outlined">logout</span> Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="content">
+            {% block content %}{% endblock %}
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{# endblock body #}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.nav-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const targetId = this.getAttribute('data-target');
+            const targetSubmenu = document.getElementById(targetId);
+
+            // bỏ active của tất cả menu cha, gồm Trang chủ
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // đóng submenu khác
+            document.querySelectorAll('.submenu').forEach(sub => {
+                if (sub.id !== targetId) sub.classList.remove('show');
+            });
+
+            if (targetSubmenu) {
+                targetSubmenu.classList.toggle('show');
+                this.classList.add('active');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

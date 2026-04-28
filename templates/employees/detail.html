@@ -1,0 +1,184 @@
+﻿{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Xem thông tin nhân viên - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/employees/employee_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="toolbar">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Nhập tên hoặc mã nhân viên cần tìm..." autocomplete="off">
+    <span class="search-icon">🔍</span>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+  <a class="btn-create" href="{% url 'employees:employee_add' %}">➕ Tạo thông tin nhân viên</a>
+</div>
+
+<div class="profile-card">
+  <button class="btn-close" onclick="window.location.href='{% url 'employees:employee_list' %}'">✕</button>
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="emp-avatar">
+      <span id="empInitials">{{ employee.full_name|slice:":2"|upper }}</span>
+      <img id="empAvatarImg" src="" alt="" style="display:none;">
+      <div class="status-dot"></div>
+    </div>
+    <div class="emp-name">{{ employee.full_name }}</div>
+    <div class="emp-meta">
+      <div class="meta-item">
+        <div class="meta-label">Mã nhân viên</div>
+        <div class="meta-value">NV{{ employee.employee_id|stringformat:"03d" }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Ngày vào làm</div>
+        <div class="meta-value">{{ employee.hire_date|date:'d/m/Y' }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Vị trí</div>
+        <div class="meta-value">{{ employee.position.position_name }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Tình trạng</div>
+        <div class="meta-value">
+          {% if employee.status == 'official' %}
+            <span style="color: #28a745;">● Chính thức</span>
+          {% else %}
+            <span style="color: #ffc107;">● Thử việc</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <!-- THÔNG TIN CÁ NHÂN -->
+    <div class="info-section">
+      <div class="info-section-title">
+        <span class="title-icon">👤</span> Thông tin cá nhân
+      </div>
+      <div class="info-grid cols-2">
+        <div class="info-field">
+          <div class="if-label">Họ và tên</div>
+          <div class="if-value">{{ employee.full_name }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Số CCCD</div>
+          <div class="if-value">{{ employee.citizen_id }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Ngày sinh</div>
+          <div class="if-value">{{ employee.date_of_birth|date:'d/m/Y' }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Giới tính</div>
+          <div class="if-value">{{ employee.get_gender_display }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THÔNG TIN LIÊN HỆ & NGÂN HÀNG -->
+    <div class="info-section">
+      <div class="info-section-title">
+        <span class="title-icon">💳</span> Thông tin liên hệ & Ngân hàng
+      </div>
+      <div class="info-grid cols-3">
+        <div class="info-field">
+          <div class="if-label">Số điện thoại</div>
+          <div class="if-value">{{ employee.phone_number }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Tên ngân hàng</div>
+          <div class="if-value">{{ employee.bank_name|default:"Chưa cập nhật" }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Số tài khoản</div>
+          <div class="if-value">{{ employee.bank_account|default:"Chưa cập nhật" }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THÔNG TIN TÀI KHOẢN -->
+    <div class="info-section">
+      <div class="info-section-title">
+        <span class="title-icon">🔑</span> Thông tin tài khoản
+      </div>
+      <div class="account-dark">
+        <div class="info-field">
+          <div class="if-label">Tên tài khoản</div>
+          <div class="if-value">{{ employee.user.username }}</div>
+        </div>
+        <div class="info-field">
+          <div class="if-label">Email</div>
+          <div class="if-value">{{ employee.user.email|default:"Chưa cập nhật" }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let searchTimeout;
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+
+  function handleSearch() {
+    const keyword = searchInput.value.trim();
+
+    if (keyword.length < 2) {
+      searchResults.classList.remove('show');
+      return;
+    }
+
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      fetch(`/employees/api/search/?q=${encodeURIComponent(keyword)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.data.length > 0) {
+            searchResults.innerHTML = data.data.map(emp => {
+              const nameHtml = emp.full_name.replace(new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark class="highlight">$1</mark>');
+              const idHtml = emp.id.replace(new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark class="highlight">$1</mark>');
+              return `
+                <div class="search-result-item" onclick="window.location.href='/employees/detail/${emp.id.replace('NV', '')}/'">
+                  <div class="sri-avatar">${emp.full_name.slice(0,2).toUpperCase()}</div>
+                  <div class="sri-info">
+                    <div class="sri-name">${nameHtml}</div>
+                    <div class="sri-code">${idHtml} &nbsp;·&nbsp; ${emp.position}</div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+            searchResults.classList.add('show');
+          } else {
+            searchResults.innerHTML = '<div class="search-empty">Không tìm thấy nhân viên</div>';
+            searchResults.classList.add('show');
+          }
+        });
+    }, 300);
+  }
+
+  searchInput.addEventListener('input', handleSearch);
+  searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      const keyword = this.value.trim();
+      if (keyword) {
+        window.location.href = `/employees/?search=${encodeURIComponent(keyword)}`;
+      }
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+      searchResults.classList.remove('show');
+    }
+  });
+</script>
+{% endblock %}

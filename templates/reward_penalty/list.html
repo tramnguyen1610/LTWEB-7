@@ -1,0 +1,116 @@
+﻿{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Danh sách Thưởng/Phạt - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/reward_penalty/xem_thong_tin.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h2>Thông tin Thưởng/Phạt</h2>
+    <span>Trang chủ / Thưởng/Phạt / Xem thông tin</span>
+</div>
+
+<form method="GET" action="{% url 'reward_list' %}" class="filter-card">
+    <label>Nhân viên:</label>
+    <input type="text" name="q" placeholder="Tìm theo tên..." value="{{ request.GET.q|default:'' }}">
+
+    <label>Loại:</label>
+    <select name="type">
+        <option value="">Tất cả</option>
+        <option value="reward" {% if request.GET.type == 'reward' %}selected{% endif %}>Thưởng</option>
+        <option value="penalty" {% if request.GET.type == 'penalty' %}selected{% endif %}>Phạt</option>
+    </select>
+
+    <label>Tháng:</label>
+    <input type="month" name="month" value="{{ request.GET.month|default:'' }}">
+
+    <button type="submit" class="btn-filter">Lọc dữ liệu</button>
+
+    {% if request.GET.q or request.GET.type or request.GET.month %}
+        <a href="{% url 'reward_list' %}" style="color: #fff; font-size: 12px; text-decoration: underline;">Xóa lọc</a>
+    {% endif %}
+</form>
+
+<div class="stats-container">
+    <div class="stat-item">
+        <span style="font-size: 32px;">👥</span>
+        <div>
+            <div class="val">{{ total_employees }}</div>
+            <div class="lbl">Tổng nhân viên</div>
+        </div>
+    </div>
+    <div class="stat-item">
+        <span style="font-size: 32px;">💰</span>
+        <div>
+            <div class="val" style="color: #2e7d32;">{{ total_reward|floatformat:0 }}đ</div>
+            <div class="lbl">Tiền thưởng tháng</div>
+        </div>
+    </div>
+    <div class="stat-item">
+        <span style="font-size: 32px;">⚠️</span>
+        <div>
+            <div class="val" style="color: #c62828;">{{ total_penalty|floatformat:0 }}đ</div>
+            <div class="lbl">Tiền phạt tháng</div>
+        </div>
+    </div>
+</div>
+
+<div class="data-card">
+    <h3 style="margin-bottom: 15px; color: #2C3142;">Lịch sử Thưởng/Phạt</h3>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nhân viên</th>
+                    <th>Loại</th>
+                    <th>Số tiền (VND)</th>
+                    <th>Ngày ghi nhận</th>
+                    <th>Lý do</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in history %}
+                <tr>
+                    <td><b>{{ item.employee.full_name }}</b></td>
+                    <td>
+                        {% if item.type == 'reward' %}
+                            <span class="badge badge-reward">Thưởng</span>
+                        {% else %}
+                            <span class="badge badge-penalty">Phạt</span>
+                        {% endif %}
+                    </td>
+                    <td style="font-weight: 700;">{{ item.amount|floatformat:0 }}đ</td>
+                    <td>{{ item.date_applied|date:"d/m/Y" }}</td>
+                    <td style="color: #666; font-style: italic;">{{ item.reason }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 40px; color: #888;">
+                        <img src="{% static 'images/empty-box.png' %}" alt="" style="width: 50px; opacity: 0.3; display: block; margin: 0 auto 10px;">
+                        Chưa có dữ liệu nào được ghi nhận.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if history.has_other_pages %}
+    <div class="pager">
+        {% if history.has_previous %}
+            <a href="?page={{ history.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.month %}&month={{ request.GET.month }}{% endif %}" class="pager-btn">Sau</a>
+        {% endif %}
+
+        <span class="pager-info">Trang {{ history.number }} / {{ history.paginator.num_pages }}</span>
+
+        {% if history.has_next %}
+            <a href="?page={{ history.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.month %}&month={{ request.GET.month }}{% endif %}" class="pager-btn">Tiếp</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

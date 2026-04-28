@@ -1,0 +1,98 @@
+﻿{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Xóa nhân viên - {{ employee.full_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/employees/employee_delete.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="delete-confirm-container">
+    <div class="confirm-card">
+        <div class="warning-icon">⚠️</div>
+        <h2>Xác nhận xóa nhân viên</h2>
+        <p>Bạn có chắc chắn muốn xóa nhân viên <strong>{{ employee.full_name }}</strong>?</p>
+
+        <div class="employee-info">
+            <div class="info-item">
+                <span class="label">Mã nhân viên:</span>
+                <span class="value">NV{{ employee.employee_id|stringformat:"03d" }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Họ tên:</span>
+                <span class="value">{{ employee.full_name }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Vị trí:</span>
+                <span class="value">{{ employee.position.position_name }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Số điện thoại:</span>
+                <span class="value">{{ employee.phone_number }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Tình trạng:</span>
+                <span class="value">
+                    {% if employee.status == 'official' %}
+                        <span class="status-official">Chính thức</span>
+                    {% else %}
+                        <span class="status-probation">Thử việc</span>
+                    {% endif %}
+                </span>
+            </div>
+            <div class="info-item">
+                <span class="label">Tên đăng nhập:</span>
+                <span class="value">{{ employee.user.username }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Email:</span>
+                <span class="value">{{ employee.user.email }}</span>
+            </div>
+        </div>
+
+        <div class="warning-text">
+            <strong>⚠️ Lưu ý quan trọng:</strong>
+            <ul>
+                <li>Hành động này <strong>KHÔNG THỂ</strong> hoàn tác</li>
+                <li>Nhân viên sẽ bị xóa vĩnh viễn khỏi hệ thống</li>
+                <li>Tài khoản đăng nhập của nhân viên cũng sẽ bị xóa</li>
+                <li>Tất cả dữ liệu liên quan (chấm công, lương, thưởng/phạt, lịch làm việc) sẽ bị xóa theo</li>
+            </ul>
+        </div>
+
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="confirm-actions">
+                <button type="submit" class="btn-confirm-delete">
+                    🗑️ Xóa nhân viên
+                </button>
+                <a href="{% url 'employees:employee_list' %}" class="btn-cancel">
+                    ❌ Hủy bỏ
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+// Thêm hiệu ứng cảnh báo khi hover vào nút xóa
+document.querySelector('.btn-confirm-delete')?.addEventListener('mouseenter', function() {
+    this.style.transform = 'scale(1.05)';
+});
+
+document.querySelector('.btn-confirm-delete')?.addEventListener('mouseleave', function() {
+    this.style.transform = 'scale(1)';
+});
+
+// Cảnh báo nếu bấm Enter trong form
+document.querySelector('form')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        if (!confirm('Bạn có chắc chắn muốn xóa nhân viên này không? Hành động này không thể hoàn tác!')) {
+            e.preventDefault();
+        }
+    }
+});
+</script>
+{% endblock %}

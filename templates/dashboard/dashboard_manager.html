@@ -1,0 +1,154 @@
+{% extends "base/base_manager.html" %}
+{% load l10n %}
+{% load static %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'js/datetime.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="welcome-card">
+    <div class="welcome-content">
+        <div>
+            <h2 class="welcome-title">Quản lý Nhân sự</h2>
+            <p class="welcome-subtitle">
+                Chào mừng bạn trở lại! Hôm nay có {{ total_employees|default:"0" }} nhân viên đang trong danh sách quản lý của Trà Sữa Bông.
+            </p>
+        </div>
+        <div class="welcome-meta">
+            <div class="meta-box">
+            <div class="meta-label">Thời gian</div>
+            <div class="meta-value" id="currentTime"></div>
+        </div>
+
+        <div class="meta-box">
+            <div class="meta-label">Ngày</div>
+            <div class="meta-value" id="currentDate"></div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="stat-cards">
+    <div class="stat-card">
+        <div class="stat-card-top">
+            <div class="stat-icon"><span class="material-symbols-outlined">groups</span></div>
+        </div>
+        <div class="stat-label">Tổng nhân viên</div>
+        <div class="stat-row">
+            <span class="stat-value">{{ total_employees|default:"0" }}</span>
+            <span class="stat-unit">Thành viên</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-top">
+            <div class="stat-icon warning">
+                <span class="material-symbols-outlined">military_tech</span>
+            </div>
+        </div>
+        <div class="stat-label">Tổng thưởng</div>
+        <div class="stat-row">
+            <span class="stat-value">{{ total_reward|localize }}</span>
+            <span class="stat-unit">đ</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-top">
+            <div class="stat-icon danger">
+                <span class="material-symbols-outlined">money_off</span>
+            </div>
+        </div>
+        <div class="stat-label">Tổng phạt</div>
+        <div class="stat-row">
+            <span class="stat-value">{{ total_penalty|localize }}</span>
+            <span class="stat-unit">đ</span>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div>
+        <div class="section-card">
+            <h2 class="section-title"><span class="material-symbols-outlined">bolt</span>Truy cập nhanh</h2>
+            <div class="quick-grid">
+                <a href="{% url 'attendance:chinh_sua_cham_cong' %}" class="quick-card">
+                    <div class="quick-left">
+                        <span class="quick-icon"><span class="material-symbols-outlined">edit_note</span></span>
+                        <div class="quick-text">
+                            <div class="qt-title">Chỉnh sửa</div>
+                            <div class="qt-sub">Chỉnh sửa chấm công</div>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </a>
+
+                <a href="{% url 'employees:employee_list' %}" class="quick-card">
+                    <div class="quick-left">
+                        <span class="quick-icon"><span class="material-symbols-outlined">person_add</span></span>
+                        <div class="quick-text">
+                            <div class="qt-title">Quản lý nhân viên</div>
+                            <div class="qt-sub">Xem và tạo thông tin nhân viên</div>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </a>
+
+                <a href="{% url 'report' %}" class="quick-card">
+                    <div class="quick-left">
+                        <span class="quick-icon"><span class="material-symbols-outlined">description</span></span>
+                        <div class="quick-text">
+                            <div class="qt-title">Báo cáo</div>
+                            <div class="qt-sub">Xem chi tiết báo cáo</div>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2 class="section-title"><span class="material-symbols-outlined">history</span>Hoạt động gần đây</h2>
+        <div class="activity-list">
+            <div class="activity-item">
+                <div class="activity-avatar"><span class="material-symbols-outlined">account_circle</span></div>
+                <div class="activity-main">
+                    <div class="activity-head">
+                        <div class="act-name">Nguyễn Thị B</div>
+                        <div class="act-time">5 phút trước</div>
+                    </div>
+                    <div class="act-text">Đã chấm công vào lúc <b>08:15</b>.</div>
+                </div>
+                <div class="tag success">Chấm công</div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-avatar"><span class="material-symbols-outlined">calendar_month</span></div>
+                <div class="activity-main">
+                    <div class="activity-head">
+                        <div class="act-name">Hệ thống</div>
+                        <div class="act-time">1 giờ trước</div>
+                    </div>
+                    <div class="act-text">Lịch làm việc tuần sau đã được phê duyệt.</div>
+                </div>
+                <div class="tag warning">Lịch làm</div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-avatar"><span class="material-symbols-outlined">bar_chart</span></div>
+                <div class="activity-main">
+                    <div class="activity-head">
+                        <div class="act-name">Báo cáo</div>
+                        <div class="act-time">2 giờ trước</div>
+                    </div>
+                    <div class="act-text">Báo cáo nhân sự tháng này đã được tạo.</div>
+                </div>
+                <div class="tag neutral">Báo cáo</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

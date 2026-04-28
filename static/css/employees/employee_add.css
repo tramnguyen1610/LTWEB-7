@@ -1,0 +1,360 @@
+:root {
+  --primary: #8B1A2B;
+  --primary-dark: #6B1220;
+  --green-btn: #1A7A32;
+  --green-btn-dark: #145528;
+  --border-color: #D4C9A8;
+  --field-border: #BFBFBF;
+  --error-color: #DC2626;
+}
+
+.form-container {
+  height: calc(100vh - 20px);
+  max-height: calc(100vh - 20px);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.form-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border-color);
+  background: #FFFDF6;
+  flex-shrink: 0; /* --- MỚI THÊM: Không cho header bị bóp méo --- */
+  z-index: 10;
+}
+
+.form-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1E2235;
+  margin: 0;
+}
+
+.close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #CCC;
+  background: white;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.form-body {
+  padding: 24px;
+
+  /* --- MỚI THÊM: Cho phép phần body cuộn dọc --- */
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Tùy chỉnh thanh cuộn cho đẹp mắt */
+.form-body::-webkit-scrollbar {
+  width: 8px;
+}
+.form-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.form-body::-webkit-scrollbar-thumb {
+  background: #D4C9A8;
+  border-radius: 999px;
+}
+.form-body::-webkit-scrollbar-thumb:hover {
+  background: #C4B998;
+}
+
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.info-card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+
+.card-title {
+  background: #F5EDD8;
+  padding: 12px 16px;
+  font-weight: 700;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.required {
+  color: var(--primary);
+}
+
+.field input, .field select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--field-border);
+  font-size: 14px;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(139,26,43,0.1);
+}
+
+.field input.error, .field select.error {
+  border-color: var(--error-color);
+  background: #FEF2F2;
+}
+
+.error-msg {
+  font-size: 11px;
+  color: var(--error-color);
+  display: none;
+}
+
+.error-msg.show {
+  display: block;
+}
+
+.gender-group {
+  display: flex;
+  gap: 20px;
+  padding: 6px 0;
+}
+
+.gender-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.gender-group input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+}
+
+.account-card {
+  margin-top: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.account-title {
+  background: #2C3142;
+  padding: 12px 18px;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.account-body {
+  background: #2C3142;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.account-body .field label {
+  color: #BFC5D2;
+}
+
+.account-body .field input {
+  background: rgba(255,255,255,0.95);
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 40px;
+}
+
+.toggle-pwd {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+}
+
+.readonly-field {
+  background: #F5F5F5 !important;
+  color: #888 !important;
+  cursor: not-allowed;
+}
+
+.info-note {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-color);
+  background: #FFFDF6;
+  flex-shrink: 0; /* --- MỚI THÊM: Cố định phần nút bấm dưới cùng --- */
+  z-index: 10;
+}
+
+.btn-cancel, .btn-save {
+  padding: 10px 28px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-cancel {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.btn-cancel:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-save {
+  background: var(--green-btn);
+  color: white;
+  border: none;
+}
+
+.btn-save:hover {
+  background: var(--green-btn-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26,122,50,0.3);
+}
+
+.toast {
+  display: none;
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid var(--green-btn);
+  border-radius: 10px;
+  padding: 12px 28px;
+  color: var(--green-btn);
+  font-weight: 600;
+  z-index: 1000;
+  white-space: nowrap;
+  animation: slideDown 0.25s ease;
+}
+
+body {
+  overflow: hidden;
+}
+
+@keyframes slideDown {
+  from { top: 0; opacity: 0; }
+  to { top: 30px; opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .two-columns {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .account-body {
+    grid-template-columns: 1fr;
+  }
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+  .btn-cancel, .btn-save {
+    justify-content: center;
+  }
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden !important;
+}
+
+.form-container {
+  height: calc(100vh - 90px) !important;
+  max-height: calc(100vh - 90px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.form-container form {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  padding: 20px 24px;
+}
+
+.form-actions {
+  flex-shrink: 0;
+}

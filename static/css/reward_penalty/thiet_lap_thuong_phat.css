@@ -1,0 +1,91 @@
+    /* Container chính cho Form */
+    .form-container-box {
+        background: #FDF5E6;
+        border: 4px solid #3498db;
+        border-radius: 25px;
+        padding: 100px;
+        max-width: 2000px;
+        margin: 0 auto;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .form-group { margin-bottom: 20px; font-size: 20px;}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 700;
+        color: #1E2235;
+        font-size: 14px;
+    }
+
+    .input-control {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 10px;
+        border: 1px solid #999;
+        font-family: 'Be Vietnam Pro', sans-serif;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .input-control:focus { border-color: #8B1A2B; box-shadow: 0 0 5px rgba(139,26,43,0.2); }
+
+    textarea.input-control { height: 120px; resize: none; }
+
+    /* Price Tags */
+    .price-row { display: flex; gap: 15px; margin-top: 5px; }
+
+    .price-tag {
+        flex: 1;
+        padding: 15px;
+        text-align: center;
+        border: 2px solid #d9534f;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+        color: #d9534f;
+        transition: all 0.2s;
+        background: #fff;
+    }
+
+    .price-tag:hover { background: #fff5f5; }
+
+    .price-tag.selected {
+        background: #d9534f;
+        color: #fff;
+    }
+
+    /* Input số tiền thủ công */
+    .custom-amount-wrap {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-row {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 30px;
+    }
+
+    .btn-action {
+        padding: 12px 35px;
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 15px;
+        transition: opacity 0.2s;
+    }
+
+    .btn-action:hover { opacity: 0.9; }
+    .btn-cancel { background: #8B1A2B; }
+    .btn-save { background: #28a745; }
+
+    .content-header { margin-bottom: 25px; color: #fff; }
+    .content-header h2 { font-size: 24px; font-weight: 800; }
+    .content-header span { font-size: 13px; opacity: 0.8; }

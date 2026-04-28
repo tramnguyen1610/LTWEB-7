@@ -1,0 +1,232 @@
+﻿{% extends "base/base_manager.html" %}
+{% load static %}
+
+{% block title %}Quản lý nhân viên - Trà Sữa Bông{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/employees/employee_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="employee-management">
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-box">
+      <form method="GET" action="{% url 'employees:employee_list' %}" id="searchForm">
+        <input type="text"
+               name="search"
+               id="searchInput"
+               placeholder="Nhập tên hoặc mã nhân viên cần tìm..."
+               value="{{ search_keyword }}"
+               autocomplete="off">
+        <span class="search-icon">🔍</span>
+      </form>
+    </div>
+    <a class="btn-create" href="{% url 'employees:employee_add' %}">
+  ➕ Tạo thông tin nhân viên
+</a>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <form method="GET" action="{% url 'employees:employee_list' %}" id="filterForm">
+      <input type="hidden" name="search" value="{{ search_keyword }}">
+
+      <select name="position" class="filter-select" onchange="this.form.submit()">
+        <option value="">-- Tất cả vị trí --</option>
+        {% for pos in positions %}
+        <option value="{{ pos.position_id }}" {% if selected_position == pos.position_id %}selected{% endif %}>
+          {{ pos.position_name }}
+        </option>
+        {% endfor %}
+      </select>
+
+      <select name="status" class="filter-select" onchange="this.form.submit()">
+        <option value="">-- Tất cả trạng thái --</option>
+        <option value="probation" {% if selected_status == 'probation' %}selected{% endif %}>Thử việc</option>
+        <option value="official" {% if selected_status == 'official' %}selected{% endif %}>Chính thức</option>
+      </select>
+
+      <select name="gender" class="filter-select" onchange="this.form.submit()">
+        <option value="">-- Tất cả giới tính --</option>
+        <option value="M" {% if selected_gender == 'M' %}selected{% endif %}>Nam</option>
+        <option value="F" {% if selected_gender == 'F' %}selected{% endif %}>Nữ</option>
+        <option value="O" {% if selected_gender == 'O' %}selected{% endif %}>Khác</option>
+      </select>
+    </form>
+
+    {% if search_keyword or selected_position or selected_status or selected_gender %}
+    <a href="{% url 'employees:employee_list' %}" class="clear-filter">✖ Xóa bộ lọc</a>
+    {% endif %}
+  </div>
+
+  <!-- SEARCH RESULT INFO -->
+  <div class="search-result-info">
+    📊 Tìm thấy <strong>{{ total_results }}</strong> nhân viên
+    {% if search_keyword %}
+    với từ khóa "<strong>{{ search_keyword }}</strong>"
+    {% endif %}
+  </div>
+
+  <!-- TABLE CARD -->
+  <div class="table-card">
+    <div class="table-card-title">
+      <span>📋</span> Danh sách nhân viên
+    </div>
+
+    <div class="employee-table-scroll">
+    <table class="employee-table">
+      <thead>
+        <tr>
+          <th>Mã nhân viên</th>
+          <th>Tên nhân viên</th>
+          <th>SĐT</th>
+          <th>Vị trí</th>
+          <th>Giới tính</th>
+          <th>Tình trạng</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for emp in employees %}
+        <tr>
+          <td>NV{{ emp.employee_id|stringformat:"03d" }}</td>
+          <td>{{ emp.full_name }}</td>
+          <td>{{ emp.phone_number }}</td>
+          <td>{{ emp.position.position_name }}</td>
+          <td>{{ emp.get_gender_display }}</td>
+          <td>
+            {% if emp.status == 'official' %}
+              <span class="status-active">● Chính thức</span>
+            {% else %}
+              <span class="status-probation">● Thử việc</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="action-btns">
+              <a href="{% url 'employees:employee_detail' emp.employee_id %}" class="action-btn btn-view" title="Xem">👁</a>
+              <a href="{% url 'employees:employee_edit' emp.employee_id %}" class="action-btn btn-edit" title="Sửa">✏️</a>
+              <button class="action-btn btn-delete" title="Xóa" onclick="askDelete('NV{{ emp.employee_id }}', '{{ emp.full_name|escapejs }}')">🗑</button>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="no-result">
+            🔍 Không tìm thấy nhân viên nào<br>
+            <small>Thử tìm kiếm với từ khóa khác hoặc <a href="{% url 'employees:employee_add' %}">thêm nhân viên mới</a></small>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      </table>
+    </div>
+    <!-- PAGINATION -->
+    {% if employees.has_other_pages %}
+    <div class="pagination">
+      {% if employees.has_previous %}
+        <button class="page-btn nav-pg" onclick="goPage({{ employees.previous_page_number }})">[Trước]</button>
+      {% endif %}
+
+      {% for num in employees.paginator.page_range %}
+        {% if employees.number == num %}
+          <button class="page-btn active">{{ num }}</button>
+        {% elif num > employees.number|add:'-3' and num < employees.number|add:'3' %}
+          <button class="page-btn" onclick="goPage({{ num }})">{{ num }}</button>
+        {% endif %}
+      {% endfor %}
+
+      {% if employees.has_next %}
+        <button class="page-btn nav-pg" onclick="goPage({{ employees.next_page_number }})">[Tiếp]</button>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- DELETE CONFIRM POPUP -->
+<div class="overlay" id="overlayConfirm">
+  <div class="popup-confirm">
+    <div class="popup-warn-icon">⚠️</div>
+    <h2>Xác nhận xóa?</h2>
+    <p>Bạn chắc chắn muốn xóa nhân viên này khỏi hệ thống?<br>Hành động này không thể hoàn tác</p>
+    <div class="popup-nv-name">
+      <div class="pn-name" id="popupName"></div>
+      <div class="pn-code" id="popupCode"></div>
+    </div>
+    <button class="btn-xoa" onclick="confirmDelete()">Xóa</button>
+    <button class="btn-huy" onclick="closeConfirm()">Hủy bỏ</button>
+  </div>
+</div>
+
+<!-- SUCCESS TOAST -->
+<div class="toast" id="toastSuccess">✅ Xóa nhân viên thành công</div>
+
+<script>
+  let deleteTarget = null;
+  let deleteId = null;
+
+  function goPage(page) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', page);
+    window.location.href = url.toString();
+  }
+
+  function askDelete(id, name) {
+    deleteTarget = id;
+    deleteId = id.replace('NV', '');
+    document.getElementById('popupName').textContent = name;
+    document.getElementById('popupCode').textContent = `Mã NV: ${id}`;
+    document.getElementById('overlayConfirm').classList.add('show');
+  }
+
+  function closeConfirm() {
+    document.getElementById('overlayConfirm').classList.remove('show');
+    deleteTarget = null;
+  }
+
+  function confirmDelete() {
+    if (!deleteTarget) return;
+
+    fetch(`/employees/api/delete/${deleteId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        closeConfirm();
+        const toast = document.getElementById('toastSuccess');
+        toast.style.display = 'block';
+        setTimeout(() => {
+          toast.style.display = 'none';
+          location.reload();
+        }, 1500);
+      } else {
+        alert('Xóa thất bại: ' + data.error);
+      }
+    })
+    .catch(error => {
+      alert('Có lỗi xảy ra: ' + error);
+    });
+  }
+
+  // Auto submit search
+  let searchTimeout;
+  document.getElementById('searchInput')?.addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      document.getElementById('searchForm').submit();
+    }, 500);
+  });
+
+  // Close overlay when clicking outside
+  document.getElementById('overlayConfirm')?.addEventListener('click', function(e) {
+    if (e.target === this) closeConfirm();
+  });
+</script>
+{% endblock %}
