@@ -4,22 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c210c6ef-28a4-42ad-8dbd-8ba15c5751f6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/LTWEB-7.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/BONG-LTW.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/attendance/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/attendance/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/reward_penalty/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/reward_penalty/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/schedule/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/schedule/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/schedule/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/schedule/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base/base_manager.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base/base_manager.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/schedule/list.html" beforeDir="false" />
-    </list>
+    <list default="true" id="c210c6ef-28a4-42ad-8dbd-8ba15c5751f6" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
